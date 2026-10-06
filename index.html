@@ -46,15 +46,6 @@
     pointer-events: none;
   }
 
-  #intro::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
   .intro-logo {
     font-size: 72px;
     font-weight: 900;
@@ -65,7 +56,6 @@
     -webkit-text-fill-color: transparent;
     opacity: 0;
     animation: introLogo 1.2s ease 0.2s forwards;
-    text-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
     position: relative;
     z-index: 1;
   }
@@ -181,7 +171,6 @@
     opacity: 0.4;
   }
 
-  /* ===== НАВИГАЦИЯ ===== */
   nav {
     position: fixed;
     top: 20px;
@@ -326,7 +315,6 @@
 
   .account-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ===== HERO ===== */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -886,7 +874,6 @@
     padding: 14px;
   }
 
-  /* ===== КАПЧА ===== */
   .captcha-wrap {
     display: flex;
     align-items: center;
@@ -1216,12 +1203,19 @@
     color: #fff;
   }
 
-  /* ===== TELEGRAM КНОПКА ===== */
-  .tg-btn {
+  /* ===== TELEGRAM КНОПКИ ===== */
+  .tg-buttons {
     position: fixed;
     bottom: 24px;
     right: 24px;
     z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .tg-btn {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1256,6 +1250,15 @@
     flex-shrink: 0;
   }
 
+  .tg-btn-channel {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .tg-btn-channel:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
   .tg-btn-text {
     display: flex;
     flex-direction: column;
@@ -1276,10 +1279,9 @@
     font-weight: 600;
   }
 
-  /* Тултип "скопировано" */
   .tg-toast {
     position: fixed;
-    bottom: 100px;
+    bottom: 180px;
     right: 24px;
     z-index: 501;
     padding: 12px 20px;
@@ -1343,7 +1345,7 @@
     .intro-logo { font-size: 32px; letter-spacing: -2px; }
     .tg-btn-text { display: none; }
     .tg-btn { padding: 14px; }
-    .tg-toast { right: 16px; bottom: 90px; left: 16px; right: 16px; }
+    .tg-toast { right: 16px; bottom: 160px; left: 16px; }
   }
 
   @media (max-width: 500px) {
@@ -1358,7 +1360,6 @@
 </head>
 <body>
 
-<!-- ИНТРО -->
 <div id="intro">
   <div class="intro-logo">CHURKA DLC</div>
   <div class="intro-bar">
@@ -1703,36 +1704,43 @@
   </div>
 </div>
 
-<!-- TELEGRAM КНОПКА -->
-<button class="tg-btn" id="tgBtn" data-i18n-title="tg_title">
-  <svg viewBox="0 0 24 24">
-    <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
-  </svg>
-  <div class="tg-btn-text">
-    <div class="tg-btn-title" data-i18n="tg_title">Техподдержка</div>
-    <div class="tg-btn-sub" id="tgSub">@Chubrik60</div>
-  </div>
-</button>
+<!-- TELEGRAM КНОПКИ -->
+<div class="tg-buttons" id="tgButtons">
+  <button class="tg-btn" id="tgBtnSupport">
+    <svg viewBox="0 0 24 24">
+      <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+    </svg>
+    <div class="tg-btn-text">
+      <div class="tg-btn-title" data-i18n="tg_support_title">Техподдержка</div>
+      <div class="tg-btn-sub">@Chubrik60</div>
+    </div>
+  </button>
 
-<!-- ТУЛТИП -->
+  <a class="tg-btn tg-btn-channel" id="tgBtnChannel" href="https://t.me/churkaDLS" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24">
+      <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+    </svg>
+    <div class="tg-btn-text">
+      <div class="tg-btn-title" data-i18n="tg_channel_title">Наш канал</div>
+      <div class="tg-btn-sub">@churkaDLS</div>
+    </div>
+  </a>
+</div>
+
 <div class="tg-toast" id="tgToast">
   <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
   <span id="tgToastText">Ник скопирован: @Chubrik60</span>
 </div>
 
 <script>
-  /* ============================================
-     ИНТРО
-  ============================================ */
+  /* ===== ИНТРО ===== */
   (function() {
     const intro = document.getElementById('intro');
     const bar = document.getElementById('introBar');
     const percent = document.getElementById('introPercent');
     let progress = 0;
 
-    const shown = sessionStorage.getItem('churka_intro_shown');
-
-    if (shown) {
+    if (sessionStorage.getItem('churka_intro_shown')) {
       intro.classList.add('hide');
       setTimeout(() => intro.remove(), 100);
       return;
@@ -1757,9 +1765,7 @@
     }, 120);
   })();
 
-  /* ============================================
-     ПЕРЕВОДЫ
-  ============================================ */
+  /* ===== ПЕРЕВОДЫ ===== */
   const translations = {
     ru: {
       nav_video: "Видео", nav_features: "Преимущества", nav_release: "Релиз", nav_faq: "FAQ", nav_login: "Войти",
@@ -1814,7 +1820,8 @@
       msg_released: "РЕЛИЗ СОСТОЯЛСЯ!",
       msg_captcha_wrong: "Неверная капча",
       msg_captcha_empty: "Введи капчу",
-      tg_title: "Техподдержка",
+      tg_support_title: "Техподдержка",
+      tg_channel_title: "Наш канал",
       tg_toast: "Ник скопирован: @Chubrik60"
     },
     en: {
@@ -1870,7 +1877,8 @@
       msg_released: "RELEASED!",
       msg_captcha_wrong: "Invalid captcha",
       msg_captcha_empty: "Enter captcha",
-      tg_title: "Support",
+      tg_support_title: "Support",
+      tg_channel_title: "Our channel",
       tg_toast: "Nickname copied: @Chubrik60"
     }
   };
@@ -1907,21 +1915,16 @@
     applyLanguage();
   });
 
-  /* ============================================
-     TELEGRAM КНОПКА — КОПИРОВАНИЕ НИКА
-  ============================================ */
+  /* ===== TELEGRAM ===== */
   const TG_NICK = '@Chubrik60';
   const TG_URL = 'https://t.me/Chubrik60';
 
-  document.getElementById('tgBtn').addEventListener('click', () => {
-    // Копируем ник
+  document.getElementById('tgBtnSupport').addEventListener('click', () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(TG_NICK).then(showToast).catch(() => fallbackCopy());
     } else {
       fallbackCopy();
     }
-
-    // Открываем телегу через небольшую задержку
     setTimeout(() => {
       window.open(TG_URL, '_blank');
     }, 400);
@@ -1948,9 +1951,7 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
   }
 
-  /* ============================================
-     ЧАСТИЦЫ
-  ============================================ */
+  /* ===== ЧАСТИЦЫ ===== */
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let W, H;
@@ -2001,9 +2002,7 @@
   }
   animate();
 
-  /* ============================================
-     ТАЙМЕР
-  ============================================ */
+  /* ===== ТАЙМЕР ===== */
   const RELEASE_DATE = new Date('2026-10-08T00:00:00').getTime();
 
   function updateTimer() {
@@ -2040,9 +2039,7 @@
     document.getElementById('notifyEmail').value = '';
   });
 
-  /* ============================================
-     КАПЧА
-  ============================================ */
+  /* ===== КАПЧА ===== */
   const captchaCanvas = document.getElementById('captchaCanvas');
   const captchaCtx = captchaCanvas.getContext('2d');
   let captchaCode = '';
@@ -2102,9 +2099,7 @@
     document.getElementById('regCaptcha').value = '';
   });
 
-  /* ============================================
-     ВИЗУАЛЫ
-  ============================================ */
+  /* ===== ВИЗУАЛЫ ===== */
   const cursorGlow = document.getElementById('cursorGlow');
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
@@ -2151,9 +2146,7 @@
     }
   });
 
-  /* ============================================
-     FAQ
-  ============================================ */
+  /* ===== FAQ ===== */
   document.querySelectorAll('.faq-question').forEach(q => {
     q.addEventListener('click', () => {
       const item = q.parentElement;
@@ -2162,9 +2155,7 @@
     });
   });
 
-  /* ============================================
-     АККАУНТ
-  ============================================ */
+  /* ===== АККАУНТ ===== */
   const modal = document.getElementById('accountModal');
   const avatarModal = document.getElementById('avatarModal');
   const accountBtn = document.getElementById('accountBtn');
