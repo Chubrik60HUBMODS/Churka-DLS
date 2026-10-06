@@ -10,14 +10,9 @@
 
   :root {
     --bg: #0a0a0c;
-    --card: rgba(255,255,255,0.04);
-    --card-hover: rgba(255,255,255,0.07);
-    --border: rgba(255,255,255,0.1);
-    --border-hover: rgba(255,255,255,0.25);
     --text: #ffffff;
     --text-dim: #a0a0a8;
     --text-mute: #6b6b73;
-    --accent: #d8d8dc;
   }
 
   html { scroll-behavior: smooth; }
@@ -31,6 +26,95 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* ===== ИНТРО ===== */
+  #intro {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #0a0a0c;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    overflow: hidden;
+  }
+
+  #intro.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  #intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .intro-logo {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #ffffff 0%, #a0a0a8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    animation: introLogo 1.2s ease 0.2s forwards;
+    text-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes introLogo {
+    0% { opacity: 0; transform: scale(0.7) translateY(20px); filter: blur(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  }
+
+  .intro-bar {
+    width: 320px;
+    max-width: 80vw;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .intro-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ffffff, #a0a0a8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    transition: width 0.15s ease;
+  }
+
+  .intro-percent {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #6b6b73;
+    letter-spacing: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .intro-tip {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #4a4a52;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
   /* ===== ФОН ===== */
   .bg-wrapper {
     position: fixed;
@@ -42,24 +126,18 @@
   .bg-image {
     position: absolute;
     inset: 0;
-    background-image: url('https://avatars.mds.yandex.net/i?id=98ae1a7cdd72d38650572d076c51edc0_l-16325797-images-thumbs&n=13');
+    background-image: url('https://avatars.mds.yandex.net/i?id=067f345683079b24a72a0cfce7446a77_l-5104820-images-thumbs&n=13');
     background-size: cover;
     background-position: center;
-    filter: brightness(0.6) saturate(0.5) contrast(1.05);
+    filter: brightness(0.55) saturate(0.4) contrast(1.05);
     transform: scale(1.05);
-    animation: bgZoom 30s ease-in-out infinite alternate;
-  }
-
-  @keyframes bgZoom {
-    0% { transform: scale(1.05); }
-    100% { transform: scale(1.12); }
   }
 
   .bg-overlay {
     position: absolute;
     inset: 0;
     background: 
-      radial-gradient(ellipse at 50% 40%, rgba(255, 220, 160, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 40%, rgba(255, 220, 160, 0.1) 0%, transparent 55%),
       linear-gradient(180deg, 
         rgba(10,10,12,0.6) 0%, 
         rgba(10,10,12,0.35) 30%,
@@ -67,12 +145,40 @@
         #0a0a0c 100%);
   }
 
-  /* ===== ЧАСТИЦЫ ===== */
   #particles {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
+  }
+
+  .cursor-glow {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+  }
+
+  .stars {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.4;
   }
 
   /* ===== НАВИГАЦИЯ ===== */
@@ -106,17 +212,18 @@
   }
 
   .logo-icon {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #f0f0f4, #8a8a92);
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #e8e8ec, #8a8a92);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 900;
     color: #1a1a1e;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    letter-spacing: -1px;
   }
 
   .logo-text {
@@ -140,18 +247,27 @@
     padding: 8px 14px;
     border-radius: 30px;
     transition: 0.3s;
+    position: relative;
   }
 
-  nav a:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.06);
+  nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: 0.3s;
+    transform: translateX(-50%);
+    border-radius: 2px;
   }
 
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  nav a:hover::after { width: 40%; }
+
+  .nav-right { display: flex; align-items: center; gap: 10px; }
 
   .lang-switch {
     display: flex;
@@ -169,13 +285,8 @@
     user-select: none;
   }
 
-  .lang-switch:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
-
-  .lang-flag {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
+  .lang-switch:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+  .lang-flag { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
 
   .account-btn {
     display: flex;
@@ -213,11 +324,7 @@
     flex-shrink: 0;
   }
 
-  .account-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .account-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
   /* ===== HERO ===== */
   .hero {
@@ -252,12 +359,6 @@
     background: #f0f0f4;
     border-radius: 50%;
     box-shadow: 0 0 10px #f0f0f4;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
   }
 
   .hero h1 {
@@ -340,7 +441,6 @@
     border-color: rgba(255,255,255,0.35);
   }
 
-  /* ===== СТАТИСТИКА ===== */
   .stats {
     display: flex;
     gap: 60px;
@@ -357,6 +457,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -1px;
+    display: inline-block;
   }
 
   .stat-label {
@@ -368,7 +469,6 @@
     font-weight: 500;
   }
 
-  /* ===== СЕКЦИИ ===== */
   section {
     padding: 100px 30px;
     max-width: 1200px;
@@ -382,9 +482,21 @@
     text-align: center;
     letter-spacing: -1.5px;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, #ffffff 40%, #909098);
+    background: linear-gradient(90deg, #ffffff, #a0a0a8, #ffffff);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    margin: 16px auto 0;
+    border-radius: 2px;
   }
 
   .section-sub {
@@ -392,9 +504,9 @@
     color: var(--text-dim);
     font-size: 16px;
     margin-bottom: 60px;
+    margin-top: 20px;
   }
 
-  /* ===== ФУНКЦИИ ===== */
   .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -407,10 +519,7 @@
     border-radius: 20px;
     padding: 32px 28px;
     transition: 0.4s;
-    position: relative;
-    overflow: hidden;
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
 
   .feature:hover {
@@ -441,94 +550,168 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    transition: 0.4s;
   }
 
-  .feature h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -0.5px;
+  .feature:hover .feature-icon svg {
+    transform: scale(1.15) rotate(-5deg);
   }
 
-  .feature p {
-    color: var(--text-dim);
-    font-size: 14px;
-    line-height: 1.7;
+  .feature h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px; }
+  .feature p { color: var(--text-dim); font-size: 14px; line-height: 1.7; }
+
+  .video-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    position: relative;
   }
 
-  /* ===== СКАЧАТЬ ===== */
-  .download-card {
+  .video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .release-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 28px;
-    padding: 60px 40px;
+    padding: 50px 40px;
     text-align: center;
     max-width: 720px;
     margin: 0 auto;
-    position: relative;
-    overflow: hidden;
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 30px 80px rgba(0,0,0,0.5);
   }
 
-  .download-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 25px;
-    background: linear-gradient(135deg, #f0f0f4, #a0a0a8);
-    border-radius: 22px;
-    display: flex;
+  .release-badge {
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 40px;
+    font-size: 13px;
+    color: #d0d0d6;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  .release-badge .dot {
+    width: 6px;
+    height: 6px;
+    background: #c0ffc0;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #c0ffc0;
+  }
+
+  .timer {
+    display: flex;
     justify-content: center;
-    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.15);
+    align-items: flex-start;
+    gap: 12px;
+    margin: 20px 0 30px;
+    flex-wrap: wrap;
   }
 
-  .download-icon svg {
-    width: 40px;
-    height: 40px;
-    stroke: #1a1a1e;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .timer-block {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 18px 22px;
+    min-width: 100px;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 30px rgba(255,255,255,0.03);
   }
 
-  .download-card h3 {
-    font-size: 28px;
+  .timer-num {
+    font-size: clamp(28px, 4vw, 44px);
     font-weight: 800;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #ffffff, #a0a0a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
 
-  .download-card .ver {
+  .timer-label {
+    font-size: 10px;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  .timer-sep {
+    font-size: 32px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.2);
+    margin-top: 20px;
+  }
+
+  .release-date {
     color: var(--text-dim);
     font-size: 14px;
     margin-bottom: 30px;
   }
 
-  .file-info {
+  .release-info {
     display: flex;
     justify-content: center;
     gap: 40px;
-    margin: 30px 0;
+    padding: 22px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 28px;
     flex-wrap: wrap;
   }
 
-  .file-info div {
-    color: var(--text-dim);
-    font-size: 13px;
+  .release-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
   }
 
-  .file-info span { color: #fff; font-weight: 600; }
-
-  .btn-download {
-    font-size: 16px;
-    padding: 18px 50px;
-    margin-top: 10px;
+  .release-info-item b {
+    font-size: 15px;
+    color: #fff;
+    letter-spacing: -0.3px;
+    text-transform: none;
   }
 
-  /* ===== FAQ ===== */
+  .release-notify {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .release-notify .form-input {
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .release-notify .btn {
+    padding: 13px 24px;
+    white-space: nowrap;
+  }
+
   .faq-item {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.1);
@@ -537,7 +720,6 @@
     overflow: hidden;
     transition: 0.3s;
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
 
   .faq-item:hover { border-color: rgba(255,255,255,0.25); }
@@ -578,7 +760,6 @@
     padding: 0 28px 24px;
   }
 
-  /* ===== МОДАЛЬНОЕ ОКНО ===== */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -705,6 +886,76 @@
     padding: 14px;
   }
 
+  /* ===== КАПЧА ===== */
+  .captcha-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .captcha-canvas-wrap {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+
+  #captchaCanvas {
+    display: block;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .captcha-refresh {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: 0.3s;
+    font-family: inherit;
+    font-weight: 700;
+  }
+
+  .captcha-refresh:hover {
+    background: rgba(255,255,255,0.15);
+    transform: rotate(90deg);
+  }
+
+  .captcha-input {
+    flex: 1;
+    padding: 13px 16px;
+    font-family: inherit;
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #fff;
+    outline: none;
+    transition: 0.3s;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .captcha-input:focus {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+  }
+
   .msg {
     margin-top: 15px;
     padding: 12px;
@@ -728,7 +979,6 @@
     border: 1px solid rgba(255, 100, 100, 0.3);
   }
 
-  /* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
   .dashboard { display: none; }
   .dashboard.active { display: block; }
 
@@ -741,16 +991,13 @@
     margin-bottom: 25px;
   }
 
-  .dash-avatar-wrap {
-    position: relative;
-    flex-shrink: 0;
-  }
+  .dash-avatar-wrap { position: relative; flex-shrink: 0; }
 
   .dash-avatar {
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f0f0f4, #a0a0a8);
+    background: linear-gradient(135deg, #e8e8ec, #a0a0a8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -762,11 +1009,7 @@
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
   }
 
-  .dash-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .dash-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
   .avatar-edit-btn {
     position: absolute;
@@ -774,7 +1017,7 @@
     right: -4px;
     width: 32px;
     height: 32px;
-    background: linear-gradient(135deg, #f0f0f4, #a8a8b0);
+    background: linear-gradient(135deg, #e8e8ec, #a8a8b0);
     border: 2px solid #14141c;
     border-radius: 50%;
     display: flex;
@@ -782,7 +1025,6 @@
     justify-content: center;
     cursor: pointer;
     transition: 0.3s;
-    color: #1a1a1e;
   }
 
   .avatar-edit-btn:hover { transform: scale(1.1); }
@@ -874,12 +1116,7 @@
     margin-bottom: 12px;
   }
 
-  .dash-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
+  .dash-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
 
   .dash-menu-item {
     display: flex;
@@ -916,13 +1153,8 @@
     flex-shrink: 0;
   }
 
-  .dash-menu-item .arrow {
-    margin-left: auto;
-    color: var(--text-mute);
-    font-size: 16px;
-  }
+  .dash-menu-item .arrow { margin-left: auto; color: var(--text-mute); font-size: 16px; }
 
-  /* Модалка смены аватарки */
   .avatar-modal .modal { max-width: 400px; }
 
   .avatar-preview {
@@ -930,7 +1162,7 @@
     height: 120px;
     border-radius: 50%;
     margin: 0 auto 20px;
-    background: linear-gradient(135deg, #f0f0f4, #a0a0a8);
+    background: linear-gradient(135deg, #e8e8ec, #a0a0a8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -941,11 +1173,7 @@
     border: 3px solid rgba(255,255,255,0.15);
   }
 
-  .avatar-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
 
   .avatar-presets {
     display: grid;
@@ -964,15 +1192,8 @@
     background-position: center;
   }
 
-  .avatar-preset:hover {
-    transform: scale(1.1);
-    border-color: rgba(255,255,255,0.4);
-  }
-
-  .avatar-preset.active {
-    border-color: #fff;
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
-  }
+  .avatar-preset:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.4); }
+  .avatar-preset.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.2); }
 
   .file-upload-label {
     display: block;
@@ -995,9 +1216,107 @@
     color: #fff;
   }
 
-  /* ===== FOOTER ===== */
+  /* ===== TELEGRAM КНОПКА ===== */
+  .tg-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 12px 14px;
+    background: rgba(20, 20, 24, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    user-select: none;
+  }
+
+  .tg-btn:hover {
+    background: rgba(40, 40, 48, 0.9);
+    border-color: rgba(255,255,255,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+  }
+
+  .tg-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .tg-btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+  }
+
+  .tg-btn-title {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .tg-btn-sub {
+    font-size: 10px;
+    color: #a0a0a8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Тултип "скопировано" */
+  .tg-toast {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    z-index: 501;
+    padding: 12px 20px;
+    background: rgba(40, 40, 48, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tg-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tg-toast svg {
+    width: 16px;
+    height: 16px;
+    stroke: #c0ffc0;
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   footer {
-    padding: 40px 30px;
+    padding: 40px 30px 100px;
     text-align: center;
     border-top: 1px solid rgba(255,255,255,0.06);
     color: var(--text-mute);
@@ -1006,14 +1325,25 @@
     backdrop-filter: blur(10px);
   }
 
-  /* ===== АДАПТИВ ===== */
   @media (max-width: 900px) {
     nav { padding: 10px 16px; top: 12px; }
     nav ul li:not(.account-li) { display: none; }
     section { padding: 70px 20px; }
     .stats { gap: 30px; }
-    .download-card { padding: 45px 25px; }
-    .file-info { gap: 20px; }
+    .cursor-glow { display: none; }
+    .intro-logo { font-size: 48px; }
+  }
+
+  @media (max-width: 600px) {
+    .release-card { padding: 35px 22px; }
+    .timer { gap: 6px; }
+    .timer-block { min-width: 70px; padding: 14px 12px; }
+    .timer-sep { font-size: 22px; margin-top: 14px; }
+    .release-info { gap: 20px; }
+    .intro-logo { font-size: 32px; letter-spacing: -2px; }
+    .tg-btn-text { display: none; }
+    .tg-btn { padding: 14px; }
+    .tg-toast { right: 16px; bottom: 90px; left: 16px; right: 16px; }
   }
 
   @media (max-width: 500px) {
@@ -1028,23 +1358,33 @@
 </head>
 <body>
 
-<!-- ФОН -->
+<!-- ИНТРО -->
+<div id="intro">
+  <div class="intro-logo">CHURKA DLC</div>
+  <div class="intro-bar">
+    <div class="intro-bar-fill" id="introBar"></div>
+  </div>
+  <div class="intro-percent" id="introPercent">0%</div>
+  <div class="intro-tip">Загрузка клиента...</div>
+</div>
+
 <div class="bg-wrapper">
   <div class="bg-image"></div>
   <div class="bg-overlay"></div>
 </div>
-
+<div class="stars" id="stars"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 <canvas id="particles"></canvas>
 
-<!-- НАВИГАЦИЯ -->
 <nav>
   <div class="logo">
-    <div class="logo-icon">C</div>
+    <div class="logo-icon">CH</div>
     <span class="logo-text">Churka DLC</span>
   </div>
   <ul>
+    <li><a href="#video" data-i18n="nav_video">Видео</a></li>
     <li><a href="#features" data-i18n="nav_features">Преимущества</a></li>
-    <li><a href="#download" data-i18n="nav_product">Продукт</a></li>
+    <li><a href="#release" data-i18n="nav_release">Релиз</a></li>
     <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
     <li class="account-li">
       <div class="nav-right">
@@ -1060,7 +1400,6 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-badge">
     <span class="dot"></span>
@@ -1069,8 +1408,8 @@
   <h1 data-i18n-html="hero_title">Это твоя игра, <span class="grad">твоя победа.</span><br>Играй с Churka DLC</h1>
   <p data-i18n="hero_desc">Churka DLC — это не просто ещё один клиент, это полное переосмысление игры в Minecraft. От исключительной производительности до продуманных функций — всё создано, чтобы ты играл на максимуме.</p>
   <div class="hero-buttons">
-    <a href="#download" class="btn btn-primary" data-i18n="hero_download">Скачать бесплатно</a>
-    <a href="#features" class="btn btn-ghost" data-i18n="hero_support">Поддержка</a>
+    <a href="#release" class="btn btn-primary" data-i18n="hero_release">Скоро релиз</a>
+    <a href="#video" class="btn btn-ghost" data-i18n="hero_watch">Смотреть демо</a>
   </div>
 
   <div class="stats">
@@ -1093,7 +1432,15 @@
   </div>
 </div>
 
-<!-- ФУНКЦИИ -->
+<section id="video">
+  <h2 class="section-title" data-i18n="video_title">Демонстрация</h2>
+  <p class="section-sub" data-i18n="video_sub">Посмотри как работает Churka DLC в деле</p>
+
+  <div class="video-wrap">
+    <iframe src="https://vkvideo.ru/video_ext.php?oid=-240491085&id=456240356&hash=4056d11b4b5ee4c8&hd=4" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
+  </div>
+</section>
+
 <section id="features">
   <h2 class="section-title" data-i18n="features_title">Преимущества</h2>
   <p class="section-sub" data-i18n="features_sub">Всё что нужно для доминации на сервере</p>
@@ -1104,117 +1451,136 @@
         <svg viewBox="0 0 24 24"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/></svg>
       </div>
       <h3>Combat</h3>
-      <p data-i18n="feat_combat">KillAura, Reach, Velocity, Criticals, AutoClicker и другие модули для PvP с настройкой под любой античит.</p>
+      <p data-i18n="feat_combat">KillAura, Reach, Velocity, Criticals, AutoClicker и другие модули для PvP.</p>
     </div>
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v6l-3 4M12 13l3 4M5 10l3-1M19 10l-3-1"/></svg>
       </div>
       <h3>Movement</h3>
-      <p data-i18n="feat_movement">Fly, Speed, NoFall, LongJump, Step, Jesus. Плавное движение без флагов от серверных проверок.</p>
+      <p data-i18n="feat_movement">Fly, Speed, NoFall, LongJump, Step, Jesus. Плавное движение без флагов.</p>
     </div>
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
       <h3>Render</h3>
-      <p data-i18n="feat_render">ESP, X-Ray, Tracers, Nametags, StorageESP. Полный обзор карты и всех игроков на сервере.</p>
+      <p data-i18n="feat_render">ESP, X-Ray, Tracers, Nametags, StorageESP. Полный обзор карты.</p>
     </div>
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
       </div>
       <h3>World</h3>
-      <p data-i18n="feat_world">Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Автоматизация любых действий в игре.</p>
+      <p data-i18n="feat_world">Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Автоматизация.</p>
     </div>
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <h3>Anti-Cheat Bypass</h3>
-      <p data-i18n="feat_bypass">Обход Matrix, Vulcan, NCP, Verus, Grim. Регулярные обновления после каждого патча античитов.</p>
+      <p data-i18n="feat_bypass">Обход Matrix, Vulcan, NCP, Verus, Grim. Регулярные обновления.</p>
     </div>
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg>
       </div>
       <h3 data-i18n="feat_custom_title">Кастомизация</h3>
-      <p data-i18n="feat_custom">Красивое GUI меню, HUD элементы, скины, темы, бинды. Настрой клиент под себя за минуту.</p>
+      <p data-i18n="feat_custom">Красивое GUI меню, HUD элементы, скины, темы, бинды.</p>
     </div>
   </div>
 </section>
 
-<!-- СКАЧАТЬ -->
-<section id="download">
-  <h2 class="section-title" data-i18n="download_title">Скачать клиент</h2>
-  <p class="section-sub" data-i18n="download_sub">Бесплатно · Без регистрации · Без ограничений</p>
+<section id="release">
+  <h2 class="section-title" data-i18n="release_title">Релиз скоро</h2>
+  <p class="section-sub" data-i18n="release_sub">Мы готовим что-то мощное</p>
 
-  <div class="download-card">
-    <div class="download-icon">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-    </div>
-    <h3>Churka DLC Client</h3>
-    <p class="ver" data-i18n="download_version">Версия 4.2 · Обновлено сегодня</p>
-
-    <div class="file-info">
-      <div><span data-i18n="dl_size">Размер:</span> <span>24.5 MB</span></div>
-      <div><span data-i18n="dl_os">Windows:</span> <span>7 / 8 / 10 / 11</span></div>
-      <div><span data-i18n="dl_safe">Безопасно:</span> <span data-i18n="dl_yes">Да</span></div>
+  <div class="release-card">
+    <div class="release-badge">
+      <span class="dot"></span>
+      <span data-i18n="release_badge">Релиз через</span>
     </div>
 
-    <button class="btn btn-primary btn-download" id="downloadBtn" data-i18n="download_btn">Скачать сейчас</button>
-    <p style="margin-top: 25px; color: var(--text-dim); font-size: 13px;" data-i18n="download_versions">
-      Поддерживаемые версии: 1.8.9 · 1.12.2 · 1.16.5 · 1.18.2 · 1.20.4
-    </p>
+    <div class="timer" id="timer">
+      <div class="timer-block">
+        <div class="timer-num" id="timerDays">00</div>
+        <div class="timer-label" data-i18n="timer_days">Дней</div>
+      </div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block">
+        <div class="timer-num" id="timerHours">00</div>
+        <div class="timer-label" data-i18n="timer_hours">Часов</div>
+      </div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block">
+        <div class="timer-num" id="timerMins">00</div>
+        <div class="timer-label" data-i18n="timer_mins">Минут</div>
+      </div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block">
+        <div class="timer-num" id="timerSecs">00</div>
+        <div class="timer-label" data-i18n="timer_secs">Секунд</div>
+      </div>
+    </div>
+
+    <p class="release-date" data-i18n="release_date">Официальный релиз: 08.10.2026</p>
+
+    <div class="release-info">
+      <div class="release-info-item">
+        <span data-i18n="release_size">Размер</span>
+        <b>24.5 MB</b>
+      </div>
+      <div class="release-info-item">
+        <span data-i18n="release_os">Windows</span>
+        <b>7 / 8 / 10 / 11</b>
+      </div>
+      <div class="release-info-item">
+        <span data-i18n="release_ver">Версия</span>
+        <b>4.2</b>
+      </div>
+    </div>
+
+    <div class="release-notify">
+      <input type="email" class="form-input" id="notifyEmail" placeholder="Твой email" data-i18n-placeholder="release_notify_ph">
+      <button class="btn btn-primary" id="notifyBtn" data-i18n="release_notify_btn">Уведомить</button>
+    </div>
+    <div class="msg" id="notifyMsg"></div>
   </div>
 </section>
 
-<!-- FAQ -->
 <section id="faq">
   <h2 class="section-title" data-i18n="faq_title">Частые вопросы</h2>
   <p class="section-sub" data-i18n="faq_sub">Всё что тебя интересует</p>
 
   <div class="faq-item">
     <div class="faq-question" data-i18n="faq_q1">Безопасен ли клиент для аккаунта?</div>
-    <div class="faq-answer" data-i18n="faq_a1">Да, наш клиент использует продвинутые методы обхода античитов и регулярно обновляется. Тем не менее, мы рекомендуем использовать его на второстепенных аккаунтах.</div>
+    <div class="faq-answer" data-i18n="faq_a1">Да, наш клиент использует продвинутые методы обхода античитов и регулярно обновляется.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-question" data-i18n="faq_q2">Какие версии Minecraft поддерживаются?</div>
-    <div class="faq-answer" data-i18n="faq_a2">Поддерживаются версии 1.8.9, 1.12.2, 1.16.5, 1.18.2 и 1.20.4. Скоро добавим поддержку 1.21.</div>
+    <div class="faq-question" data-i18n="faq_q2">Когда выйдет клиент?</div>
+    <div class="faq-answer" data-i18n="faq_a2">Официальный релиз запланирован на 08.10.2026. Подпишись на уведомление, чтобы не пропустить.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-question" data-i18n="faq_q3">Как установить клиент?</div>
-    <div class="faq-answer" data-i18n="faq_a3">Скачай лаунчер с нашего сайта, распакуй архив, запусти .exe файл от имени администратора и играй. Установка занимает не более минуты.</div>
+    <div class="faq-question" data-i18n="faq_q3">Какие версии Minecraft поддерживаются?</div>
+    <div class="faq-answer" data-i18n="faq_a3">Поддерживаются версии 1.8.9, 1.12.2, 1.16.5, 1.18.2 и 1.20.4.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-question" data-i18n="faq_q4">Это правда бесплатно?</div>
-    <div class="faq-answer" data-i18n="faq_a4">Да, клиент полностью бесплатный. Никаких подписок, скрытых платежей и премиум-функций. Все 200+ модулей доступны сразу.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-question" data-i18n="faq_q5">Обновляется ли обход античитов?</div>
-    <div class="faq-answer" data-i18n="faq_a5">Да, наша команда отслеживает все обновления популярных античитов и выпускает патчи в течение 24-48 часов после обновления.</div>
+    <div class="faq-question" data-i18n="faq_q4">Это будет бесплатно?</div>
+    <div class="faq-answer" data-i18n="faq_a4">Да, клиент полностью бесплатный. Никаких подписок и скрытых платежей.</div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <p data-i18n="footer_copy">© 2025 Churka DLC. Все права защищены.</p>
+  <p data-i18n="footer_copy">© 2026 Churka DLC. Все права защищены.</p>
   <p style="margin-top: 8px;" data-i18n="footer_note">Данный сайт создан в ознакомительных целях.</p>
 </footer>
 
-<!-- МОДАЛЬНОЕ ОКНО АККАУНТА / ЛИЧНОГО КАБИНЕТА -->
 <div class="modal-overlay" id="accountModal">
   <div class="modal">
     <button class="close-btn" id="closeModal">✕</button>
 
-    <!-- ФОРМА ВХОДА/РЕГИСТРАЦИИ -->
     <div id="authView">
       <h2 data-i18n="auth_title">Аккаунт</h2>
-
       <div class="tabs">
         <div class="tab active" data-tab="login" data-i18n="auth_login_tab">Вход</div>
         <div class="tab" data-tab="register" data-i18n="auth_register_tab">Регистрация</div>
@@ -1245,13 +1611,22 @@
           <label data-i18n="auth_pass">Пароль</label>
           <input type="password" class="form-input" id="regPass" placeholder="••••••••" required minlength="6">
         </div>
+        <div class="form-group">
+          <label data-i18n="auth_captcha">Капча</label>
+          <div class="captcha-wrap">
+            <div class="captcha-canvas-wrap">
+              <canvas id="captchaCanvas" width="140" height="48"></canvas>
+              <button type="button" class="captcha-refresh" id="captchaRefresh" title="Обновить">↻</button>
+            </div>
+            <input type="text" class="captcha-input" id="regCaptcha" maxlength="5" placeholder="КОД" autocomplete="off" required>
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary form-btn" data-i18n="auth_register_btn">Зарегистрироваться</button>
       </form>
 
       <div class="msg" id="authMsg"></div>
     </div>
 
-    <!-- ЛИЧНЫЙ КАБИНЕТ -->
     <div class="dashboard" id="dashboard">
       <div class="dash-header">
         <div class="dash-avatar-wrap">
@@ -1288,9 +1663,9 @@
 
       <div class="dash-section-title" data-i18n="dash_menu_title">Меню</div>
       <div class="dash-menu">
-        <button class="dash-menu-item" id="menuDownload">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          <span data-i18n="dash_download">Скачать клиент</span>
+        <button class="dash-menu-item" id="menuRelease">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span data-i18n="dash_release">Дата релиза</span>
           <span class="arrow">›</span>
         </button>
         <button class="dash-menu-item" id="menuChangePass">
@@ -1300,7 +1675,7 @@
         </button>
         <button class="dash-menu-item" id="menuLogout">
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          <span data-i18n="dash_logout">Выйти из аккаунта</span>
+          <span data-i18n="dash_logout">Выйти</span>
           <span class="arrow">›</span>
         </button>
       </div>
@@ -1308,12 +1683,10 @@
   </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО СМЕНЫ АВАТАРКИ -->
 <div class="modal-overlay avatar-modal" id="avatarModal">
   <div class="modal">
     <button class="close-btn" id="closeAvatarModal">✕</button>
     <h2 data-i18n="avatar_title">Смена аватарки</h2>
-
     <div class="avatar-preview" id="avatarPreview">S</div>
 
     <div class="dash-section-title" data-i18n="avatar_presets">Готовые аватарки</div>
@@ -1321,181 +1694,190 @@
 
     <div class="dash-section-title" data-i18n="avatar_upload">Своя картинка</div>
     <label class="file-upload-label" for="avatarFileInput">
-      <span data-i18n="avatar_upload_btn">Выбрать файл с компьютера</span>
+      <span data-i18n="avatar_upload_btn">Выбрать файл</span>
     </label>
     <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
 
     <button class="btn btn-primary form-btn" id="saveAvatarBtn" data-i18n="avatar_save" style="margin-top: 20px;">Сохранить</button>
-    <button class="btn btn-ghost form-btn" id="resetAvatarBtn" data-i18n="avatar_reset" style="margin-top: 8px;">Сбросить на букву</button>
+    <button class="btn btn-ghost form-btn" id="resetAvatarBtn" data-i18n="avatar_reset" style="margin-top: 8px;">Сбросить</button>
   </div>
+</div>
+
+<!-- TELEGRAM КНОПКА -->
+<button class="tg-btn" id="tgBtn" data-i18n-title="tg_title">
+  <svg viewBox="0 0 24 24">
+    <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+  </svg>
+  <div class="tg-btn-text">
+    <div class="tg-btn-title" data-i18n="tg_title">Техподдержка</div>
+    <div class="tg-btn-sub" id="tgSub">@Chubrik60</div>
+  </div>
+</button>
+
+<!-- ТУЛТИП -->
+<div class="tg-toast" id="tgToast">
+  <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
+  <span id="tgToastText">Ник скопирован: @Chubrik60</span>
 </div>
 
 <script>
   /* ============================================
-     ПЕРЕВОДЫ (RU / EN)
+     ИНТРО
+  ============================================ */
+  (function() {
+    const intro = document.getElementById('intro');
+    const bar = document.getElementById('introBar');
+    const percent = document.getElementById('introPercent');
+    let progress = 0;
+
+    const shown = sessionStorage.getItem('churka_intro_shown');
+
+    if (shown) {
+      intro.classList.add('hide');
+      setTimeout(() => intro.remove(), 100);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      progress += Math.random() * 8 + 2;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        bar.style.width = '100%';
+        percent.textContent = '100%';
+        setTimeout(() => {
+          intro.classList.add('hide');
+          sessionStorage.setItem('churka_intro_shown', '1');
+          setTimeout(() => intro.remove(), 900);
+        }, 400);
+      } else {
+        bar.style.width = progress + '%';
+        percent.textContent = Math.floor(progress) + '%';
+      }
+    }, 120);
+  })();
+
+  /* ============================================
+     ПЕРЕВОДЫ
   ============================================ */
   const translations = {
     ru: {
-      nav_features: "Преимущества",
-      nav_product: "Продукт",
-      nav_faq: "FAQ",
-      nav_login: "Войти",
+      nav_video: "Видео", nav_features: "Преимущества", nav_release: "Релиз", nav_faq: "FAQ", nav_login: "Войти",
       hero_badge: "Мы лучший клиент среди всех!",
       hero_title: "Это твоя игра, <span class='grad'>твоя победа.</span><br>Играй с Churka DLC",
       hero_desc: "Churka DLC — это не просто ещё один клиент, это полное переосмысление игры в Minecraft. От исключительной производительности до продуманных функций — всё создано, чтобы ты играл на максимуме.",
-      hero_download: "Скачать бесплатно",
-      hero_support: "Поддержка",
-      stat_players: "Игроков",
-      stat_funcs: "Функций",
-      stat_ud: "Undetected",
-      stat_support: "Поддержка",
-      features_title: "Преимущества",
-      features_sub: "Всё что нужно для доминации на сервере",
-      feat_combat: "KillAura, Reach, Velocity, Criticals, AutoClicker и другие модули для PvP с настройкой под любой античит.",
-      feat_movement: "Fly, Speed, NoFall, LongJump, Step, Jesus. Плавное движение без флагов от серверных проверок.",
-      feat_render: "ESP, X-Ray, Tracers, Nametags, StorageESP. Полный обзор карты и всех игроков на сервере.",
-      feat_world: "Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Автоматизация любых действий в игре.",
-      feat_bypass: "Обход Matrix, Vulcan, NCP, Verus, Grim. Регулярные обновления после каждого патча античитов.",
-      feat_custom_title: "Кастомизация",
-      feat_custom: "Красивое GUI меню, HUD элементы, скины, темы, бинды. Настрой клиент под себя за минуту.",
-      download_title: "Скачать клиент",
-      download_sub: "Бесплатно · Без регистрации · Без ограничений",
-      download_version: "Версия 4.2 · Обновлено сегодня",
-      dl_size: "Размер:",
-      dl_os: "Windows:",
-      dl_safe: "Безопасно:",
-      dl_yes: "Да",
-      download_btn: "Скачать сейчас",
-      download_versions: "Поддерживаемые версии: 1.8.9 · 1.12.2 · 1.16.5 · 1.18.2 · 1.20.4",
-      faq_title: "Частые вопросы",
-      faq_sub: "Всё что тебя интересует",
+      hero_release: "Скоро релиз", hero_watch: "Смотреть демо",
+      stat_players: "Игроков", stat_funcs: "Функций", stat_ud: "Undetected", stat_support: "Поддержка",
+      video_title: "Демонстрация", video_sub: "Посмотри как работает Churka DLC в деле",
+      features_title: "Преимущества", features_sub: "Всё что нужно для доминации на сервере",
+      feat_combat: "KillAura, Reach, Velocity, Criticals, AutoClicker и другие модули для PvP.",
+      feat_movement: "Fly, Speed, NoFall, LongJump, Step, Jesus. Плавное движение без флагов.",
+      feat_render: "ESP, X-Ray, Tracers, Nametags, StorageESP. Полный обзор карты.",
+      feat_world: "Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Автоматизация.",
+      feat_bypass: "Обход Matrix, Vulcan, NCP, Verus, Grim. Регулярные обновления.",
+      feat_custom_title: "Кастомизация", feat_custom: "Красивое GUI меню, HUD элементы, скины, темы, бинды.",
+      release_title: "Релиз скоро", release_sub: "Мы готовим что-то мощное",
+      release_badge: "Релиз через", release_date: "Официальный релиз: 08.10.2026",
+      release_size: "Размер", release_os: "Windows", release_ver: "Версия",
+      release_notify_ph: "Твой email", release_notify_btn: "Уведомить",
+      timer_days: "Дней", timer_hours: "Часов", timer_mins: "Минут", timer_secs: "Секунд",
+      faq_title: "Частые вопросы", faq_sub: "Всё что тебя интересует",
       faq_q1: "Безопасен ли клиент для аккаунта?",
-      faq_a1: "Да, наш клиент использует продвинутые методы обхода античитов и регулярно обновляется. Тем не менее, мы рекомендуем использовать его на второстепенных аккаунтах.",
-      faq_q2: "Какие версии Minecraft поддерживаются?",
-      faq_a2: "Поддерживаются версии 1.8.9, 1.12.2, 1.16.5, 1.18.2 и 1.20.4. Скоро добавим поддержку 1.21.",
-      faq_q3: "Как установить клиент?",
-      faq_a3: "Скачай лаунчер с нашего сайта, распакуй архив, запусти .exe файл от имени администратора и играй. Установка занимает не более минуты.",
-      faq_q4: "Это правда бесплатно?",
-      faq_a4: "Да, клиент полностью бесплатный. Никаких подписок, скрытых платежей и премиум-функций. Все 200+ модулей доступны сразу.",
-      faq_q5: "Обновляется ли обход античитов?",
-      faq_a5: "Да, наша команда отслеживает все обновления популярных античитов и выпускает патчи в течение 24-48 часов после обновления.",
-      footer_copy: "© 2025 Churka DLC. Все права защищены.",
+      faq_a1: "Да, наш клиент использует продвинутые методы обхода античитов и регулярно обновляется.",
+      faq_q2: "Когда выйдет клиент?",
+      faq_a2: "Официальный релиз запланирован на 08.10.2026. Подпишись на уведомление, чтобы не пропустить.",
+      faq_q3: "Какие версии Minecraft поддерживаются?",
+      faq_a3: "Поддерживаются версии 1.8.9, 1.12.2, 1.16.5, 1.18.2 и 1.20.4.",
+      faq_q4: "Это будет бесплатно?",
+      faq_a4: "Да, клиент полностью бесплатный. Никаких подписок и скрытых платежей.",
+      footer_copy: "© 2026 Churka DLC. Все права защищены.",
       footer_note: "Данный сайт создан в ознакомительных целях.",
-      auth_title: "Аккаунт",
-      auth_login_tab: "Вход",
-      auth_register_tab: "Регистрация",
-      auth_nick: "Никнейм",
-      auth_email: "Email",
-      auth_pass: "Пароль",
-      auth_login_btn: "Войти",
-      auth_register_btn: "Зарегистрироваться",
-      dash_online: "Онлайн",
-      dash_stats_title: "Статистика",
-      dash_hours: "Часов",
-      dash_wins: "Побед",
-      dash_days: "Дней с нами",
-      dash_menu_title: "Меню",
-      dash_download: "Скачать клиент",
-      dash_password: "Сменить пароль",
-      dash_logout: "Выйти из аккаунта",
-      avatar_title: "Смена аватарки",
-      avatar_presets: "Готовые аватарки",
-      avatar_upload: "Своя картинка",
-      avatar_upload_btn: "Выбрать файл с компьютера",
-      avatar_save: "Сохранить",
-      avatar_reset: "Сбросить на букву",
+      auth_title: "Аккаунт", auth_login_tab: "Вход", auth_register_tab: "Регистрация",
+      auth_nick: "Никнейм", auth_email: "Email", auth_pass: "Пароль", auth_captcha: "Капча",
+      auth_login_btn: "Войти", auth_register_btn: "Зарегистрироваться",
+      dash_online: "Онлайн", dash_stats_title: "Статистика",
+      dash_hours: "Часов", dash_wins: "Побед", dash_days: "Дней с нами",
+      dash_menu_title: "Меню", dash_release: "Дата релиза",
+      dash_password: "Сменить пароль", dash_logout: "Выйти",
+      avatar_title: "Смена аватарки", avatar_presets: "Готовые аватарки",
+      avatar_upload: "Своя картинка", avatar_upload_btn: "Выбрать файл",
+      avatar_save: "Сохранить", avatar_reset: "Сбросить",
       msg_reg_success: "Регистрация успешна!",
       msg_login_success: "Успешный вход!",
       msg_user_not_found: "Пользователь не найден",
       msg_wrong_pass: "Неверный пароль",
       msg_nick_short: "Никнейм минимум 3 символа",
       msg_nick_taken: "Никнейм уже занят",
-      msg_avatar_saved: "Аватарка сохранена"
+      msg_avatar_saved: "Аватарка сохранена",
+      msg_notify_ok: "Готово! Уведомим тебя 08.10.2026",
+      msg_notify_bad: "Введи корректный email",
+      msg_released: "РЕЛИЗ СОСТОЯЛСЯ!",
+      msg_captcha_wrong: "Неверная капча",
+      msg_captcha_empty: "Введи капчу",
+      tg_title: "Техподдержка",
+      tg_toast: "Ник скопирован: @Chubrik60"
     },
     en: {
-      nav_features: "Features",
-      nav_product: "Product",
-      nav_faq: "FAQ",
-      nav_login: "Sign in",
+      nav_video: "Video", nav_features: "Features", nav_release: "Release", nav_faq: "FAQ", nav_login: "Sign in",
       hero_badge: "We are the best client among all!",
       hero_title: "It's your game, <span class='grad'>your victory.</span><br>Play with Churka DLC",
       hero_desc: "Churka DLC is not just another client, it's a complete rethinking of Minecraft. From exceptional performance to thoughtful features — everything is built so you play at maximum.",
-      hero_download: "Download for free",
-      hero_support: "Support",
-      stat_players: "Players",
-      stat_funcs: "Features",
-      stat_ud: "Undetected",
-      stat_support: "Support",
-      features_title: "Features",
-      features_sub: "Everything you need to dominate the server",
-      feat_combat: "KillAura, Reach, Velocity, Criticals, AutoClicker and other PvP modules configurable for any anti-cheat.",
-      feat_movement: "Fly, Speed, NoFall, LongJump, Step, Jesus. Smooth movement with no flags from server checks.",
-      feat_render: "ESP, X-Ray, Tracers, Nametags, StorageESP. Full overview of the map and all players on the server.",
-      feat_world: "Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Automation of any in-game actions.",
-      feat_bypass: "Bypass Matrix, Vulcan, NCP, Verus, Grim. Regular updates after every anti-cheat patch.",
-      feat_custom_title: "Customization",
-      feat_custom: "Beautiful GUI menu, HUD elements, skins, themes, keybinds. Configure the client in a minute.",
-      download_title: "Download client",
-      download_sub: "Free · No registration · No limits",
-      download_version: "Version 4.2 · Updated today",
-      dl_size: "Size:",
-      dl_os: "Windows:",
-      dl_safe: "Safe:",
-      dl_yes: "Yes",
-      download_btn: "Download now",
-      download_versions: "Supported versions: 1.8.9 · 1.12.2 · 1.16.5 · 1.18.2 · 1.20.4",
-      faq_title: "FAQ",
-      faq_sub: "Everything you want to know",
+      hero_release: "Release soon", hero_watch: "Watch demo",
+      stat_players: "Players", stat_funcs: "Features", stat_ud: "Undetected", stat_support: "Support",
+      video_title: "Demonstration", video_sub: "Watch how Churka DLC works in action",
+      features_title: "Features", features_sub: "Everything you need to dominate the server",
+      feat_combat: "KillAura, Reach, Velocity, Criticals, AutoClicker and other PvP modules.",
+      feat_movement: "Fly, Speed, NoFall, LongJump, Step, Jesus. Smooth movement with no flags.",
+      feat_render: "ESP, X-Ray, Tracers, Nametags, StorageESP. Full map overview.",
+      feat_world: "Scaffold, Nuker, AutoFarm, ChestStealer, FastPlace. Automation.",
+      feat_bypass: "Bypass Matrix, Vulcan, NCP, Verus, Grim. Regular updates.",
+      feat_custom_title: "Customization", feat_custom: "Beautiful GUI menu, HUD elements, skins, themes, keybinds.",
+      release_title: "Release soon", release_sub: "We are preparing something powerful",
+      release_badge: "Release in", release_date: "Official release: 10/08/2026",
+      release_size: "Size", release_os: "Windows", release_ver: "Version",
+      release_notify_ph: "Your email", release_notify_btn: "Notify me",
+      timer_days: "Days", timer_hours: "Hours", timer_mins: "Minutes", timer_secs: "Seconds",
+      faq_title: "FAQ", faq_sub: "Everything you want to know",
       faq_q1: "Is the client safe for my account?",
-      faq_a1: "Yes, our client uses advanced anti-cheat bypass methods and is updated regularly. However, we recommend using it on secondary accounts.",
-      faq_q2: "Which Minecraft versions are supported?",
-      faq_a2: "Versions 1.8.9, 1.12.2, 1.16.5, 1.18.2 and 1.20.4 are supported. Support for 1.21 is coming soon.",
-      faq_q3: "How to install the client?",
-      faq_a3: "Download the launcher from our site, extract the archive, run the .exe file as administrator and play. Installation takes less than a minute.",
-      faq_q4: "Is it really free?",
-      faq_a4: "Yes, the client is completely free. No subscriptions, hidden payments or premium features. All 200+ modules are available at once.",
-      faq_q5: "Is the anti-cheat bypass updated?",
-      faq_a5: "Yes, our team tracks all updates of popular anti-cheats and releases patches within 24-48 hours after the update.",
-      footer_copy: "© 2025 Churka DLC. All rights reserved.",
+      faq_a1: "Yes, our client uses advanced anti-cheat bypass methods and is updated regularly.",
+      faq_q2: "When will the client be released?",
+      faq_a2: "The official release is scheduled for 10/08/2026. Subscribe for notification so you don't miss it.",
+      faq_q3: "Which Minecraft versions are supported?",
+      faq_a3: "Versions 1.8.9, 1.12.2, 1.16.5, 1.18.2 and 1.20.4 are supported.",
+      faq_q4: "Will it be free?",
+      faq_a4: "Yes, the client is completely free. No subscriptions or hidden payments.",
+      footer_copy: "© 2026 Churka DLC. All rights reserved.",
       footer_note: "This site was created for informational purposes.",
-      auth_title: "Account",
-      auth_login_tab: "Sign in",
-      auth_register_tab: "Sign up",
-      auth_nick: "Nickname",
-      auth_email: "Email",
-      auth_pass: "Password",
-      auth_login_btn: "Sign in",
-      auth_register_btn: "Sign up",
-      dash_online: "Online",
-      dash_stats_title: "Statistics",
-      dash_hours: "Hours",
-      dash_wins: "Wins",
-      dash_days: "Days with us",
-      dash_menu_title: "Menu",
-      dash_download: "Download client",
-      dash_password: "Change password",
-      dash_logout: "Sign out",
-      avatar_title: "Change avatar",
-      avatar_presets: "Preset avatars",
-      avatar_upload: "Custom image",
-      avatar_upload_btn: "Choose file from computer",
-      avatar_save: "Save",
-      avatar_reset: "Reset to letter",
+      auth_title: "Account", auth_login_tab: "Sign in", auth_register_tab: "Sign up",
+      auth_nick: "Nickname", auth_email: "Email", auth_pass: "Password", auth_captcha: "Captcha",
+      auth_login_btn: "Sign in", auth_register_btn: "Sign up",
+      dash_online: "Online", dash_stats_title: "Statistics",
+      dash_hours: "Hours", dash_wins: "Wins", dash_days: "Days with us",
+      dash_menu_title: "Menu", dash_release: "Release date",
+      dash_password: "Change password", dash_logout: "Sign out",
+      avatar_title: "Change avatar", avatar_presets: "Preset avatars",
+      avatar_upload: "Custom image", avatar_upload_btn: "Choose file",
+      avatar_save: "Save", avatar_reset: "Reset",
       msg_reg_success: "Registration successful!",
       msg_login_success: "Login successful!",
       msg_user_not_found: "User not found",
       msg_wrong_pass: "Wrong password",
       msg_nick_short: "Nickname must be at least 3 characters",
       msg_nick_taken: "Nickname already taken",
-      msg_avatar_saved: "Avatar saved"
+      msg_avatar_saved: "Avatar saved",
+      msg_notify_ok: "Done! We'll notify you on 10/08/2026",
+      msg_notify_bad: "Enter a valid email",
+      msg_released: "RELEASED!",
+      msg_captcha_wrong: "Invalid captcha",
+      msg_captcha_empty: "Enter captcha",
+      tg_title: "Support",
+      tg_toast: "Nickname copied: @Chubrik60"
     }
   };
 
   let currentLang = localStorage.getItem('churka_lang') || 'ru';
 
-  function t(key) {
-    return translations[currentLang][key] || key;
-  }
+  function t(key) { return translations[currentLang][key] || key; }
 
   function applyLanguage() {
     document.documentElement.lang = currentLang;
@@ -1503,21 +1885,20 @@
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
-      if (translations[currentLang][key]) {
-        el.textContent = translations[currentLang][key];
-      }
+      if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
     });
 
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
       const key = el.dataset.i18nHtml;
-      if (translations[currentLang][key]) {
-        el.innerHTML = translations[currentLang][key];
-      }
+      if (translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
     });
 
-    if (!currentUser) {
-      document.getElementById('navName').textContent = t('nav_login');
-    }
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (translations[currentLang][key]) el.placeholder = translations[currentLang][key];
+    });
+
+    if (!currentUser) document.getElementById('navName').textContent = t('nav_login');
   }
 
   document.getElementById('langSwitch').addEventListener('click', () => {
@@ -1527,26 +1908,61 @@
   });
 
   /* ============================================
+     TELEGRAM КНОПКА — КОПИРОВАНИЕ НИКА
+  ============================================ */
+  const TG_NICK = '@Chubrik60';
+  const TG_URL = 'https://t.me/Chubrik60';
+
+  document.getElementById('tgBtn').addEventListener('click', () => {
+    // Копируем ник
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(TG_NICK).then(showToast).catch(() => fallbackCopy());
+    } else {
+      fallbackCopy();
+    }
+
+    // Открываем телегу через небольшую задержку
+    setTimeout(() => {
+      window.open(TG_URL, '_blank');
+    }, 400);
+  });
+
+  function fallbackCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = TG_NICK;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+    showToast();
+  }
+
+  let toastTimer = null;
+  function showToast() {
+    const toast = document.getElementById('tgToast');
+    document.getElementById('tgToastText').textContent = t('tg_toast');
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  /* ============================================
      ЧАСТИЦЫ
   ============================================ */
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let W, H;
 
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
   const COLORS = ['#ffffff', '#e0e0e4', '#c0c0c8', '#a0a0a8'];
 
   class Particle {
-    constructor() {
-      this.reset();
-      this.y = Math.random() * H;
-    }
+    constructor() { this.reset(); this.y = Math.random() * H; }
     reset() {
       this.x = Math.random() * W;
       this.y = H + 20;
@@ -1586,20 +2002,168 @@
   animate();
 
   /* ============================================
+     ТАЙМЕР
+  ============================================ */
+  const RELEASE_DATE = new Date('2026-10-08T00:00:00').getTime();
+
+  function updateTimer() {
+    const diff = RELEASE_DATE - Date.now();
+    if (diff <= 0) {
+      const timerEl = document.getElementById('timer');
+      if (timerEl) timerEl.innerHTML = 
+        `<div style="font-size:24px;font-weight:800;color:#fff;letter-spacing:-1px;">${t('msg_released')}</div>`;
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('timerDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('timerHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('timerMins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('timerSecs').textContent = String(secs).padStart(2, '0');
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+
+  document.getElementById('notifyBtn').addEventListener('click', () => {
+    const email = document.getElementById('notifyEmail').value.trim();
+    const msg = document.getElementById('notifyMsg');
+    if (!email || !email.includes('@')) {
+      msg.textContent = t('msg_notify_bad');
+      msg.className = 'msg error';
+      return;
+    }
+    msg.textContent = t('msg_notify_ok');
+    msg.className = 'msg success';
+    document.getElementById('notifyEmail').value = '';
+  });
+
+  /* ============================================
+     КАПЧА
+  ============================================ */
+  const captchaCanvas = document.getElementById('captchaCanvas');
+  const captchaCtx = captchaCanvas.getContext('2d');
+  let captchaCode = '';
+
+  function generateCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    captchaCode = '';
+    for (let i = 0; i < 5; i++) {
+      captchaCode += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    const W = captchaCanvas.width;
+    const H = captchaCanvas.height;
+
+    captchaCtx.fillStyle = '#0a0a0c';
+    captchaCtx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < 8; i++) {
+      captchaCtx.strokeStyle = `rgba(255, 255, 255, ${Math.random() * 0.25})`;
+      captchaCtx.lineWidth = 1;
+      captchaCtx.beginPath();
+      captchaCtx.moveTo(Math.random() * W, Math.random() * H);
+      captchaCtx.lineTo(Math.random() * W, Math.random() * H);
+      captchaCtx.stroke();
+    }
+
+    for (let i = 0; i < 40; i++) {
+      captchaCtx.fillStyle = `rgba(200, 200, 210, ${Math.random() * 0.4})`;
+      captchaCtx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+    }
+
+    captchaCtx.font = 'bold 28px monospace';
+    captchaCtx.textBaseline = 'middle';
+    for (let i = 0; i < captchaCode.length; i++) {
+      const x = 15 + i * 24;
+      const y = H / 2 + (Math.random() - 0.5) * 10;
+      const rotate = (Math.random() - 0.5) * 0.5;
+      captchaCtx.save();
+      captchaCtx.translate(x, y);
+      captchaCtx.rotate(rotate);
+      captchaCtx.fillStyle = i % 2 === 0 ? '#ffffff' : '#c0c0c8';
+      captchaCtx.fillText(captchaCode[i], 0, 0);
+      captchaCtx.restore();
+    }
+  }
+
+  generateCaptcha();
+
+  document.getElementById('captchaRefresh').addEventListener('click', (e) => {
+    e.preventDefault();
+    generateCaptcha();
+    document.getElementById('regCaptcha').value = '';
+  });
+
+  captchaCanvas.addEventListener('click', () => {
+    generateCaptcha();
+    document.getElementById('regCaptcha').value = '';
+  });
+
+  /* ============================================
+     ВИЗУАЛЫ
+  ============================================ */
+  const cursorGlow = document.getElementById('cursorGlow');
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let glowX = mouseX;
+  let glowY = mouseY;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animateGlow() {
+    glowX += (mouseX - glowX) * 0.1;
+    glowY += (mouseY - glowY) * 0.1;
+    cursorGlow.style.left = glowX + 'px';
+    cursorGlow.style.top = glowY + 'px';
+    requestAnimationFrame(animateGlow);
+  }
+  animateGlow();
+
+  if ('ontouchstart' in window) cursorGlow.style.display = 'none';
+
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.width = (1 + Math.random() * 2) + 'px';
+    star.style.height = star.style.width;
+    if (Math.random() > 0.9) {
+      star.style.width = '3px';
+      star.style.height = '3px';
+      star.style.boxShadow = '0 0 8px #fff';
+    }
+    starsContainer.appendChild(star);
+  }
+
+  const hero = document.querySelector('.hero');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    if (hero && scrolled < window.innerHeight) {
+      hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+    }
+  });
+
+  /* ============================================
      FAQ
   ============================================ */
   document.querySelectorAll('.faq-question').forEach(q => {
     q.addEventListener('click', () => {
       const item = q.parentElement;
-      document.querySelectorAll('.faq-item').forEach(i => {
-        if (i !== item) i.classList.remove('active');
-      });
+      document.querySelectorAll('.faq-item').forEach(i => { if (i !== item) i.classList.remove('active'); });
       item.classList.toggle('active');
     });
   });
 
   /* ============================================
-     АККАУНТ / ЛИЧНЫЙ КАБИНЕТ
+     АККАУНТ
   ============================================ */
   const modal = document.getElementById('accountModal');
   const avatarModal = document.getElementById('avatarModal');
@@ -1635,7 +2199,6 @@
     if (currentUser) {
       authView.style.display = 'none';
       dashboard.classList.add('active');
-
       document.getElementById('dashName').textContent = currentUser.name;
       document.getElementById('dashEmail').textContent = currentUser.email || '—';
 
@@ -1647,7 +2210,6 @@
         navAvatar.textContent = letter;
         document.getElementById('dashAvatar').textContent = letter;
       }
-
       navName.textContent = currentUser.name;
 
       if (currentUser.regDate) {
@@ -1662,20 +2224,11 @@
     }
   }
 
-  accountBtn.addEventListener('click', () => {
-    modal.classList.add('active');
-    updateUI();
-  });
-
+  accountBtn.addEventListener('click', () => { modal.classList.add('active'); updateUI(); });
   closeModal.addEventListener('click', () => modal.classList.remove('active'));
-  modal.addEventListener('click', e => {
-    if (e.target === modal) modal.classList.remove('active');
-  });
-
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
   closeAvatarModal.addEventListener('click', () => avatarModal.classList.remove('active'));
-  avatarModal.addEventListener('click', e => {
-    if (e.target === avatarModal) avatarModal.classList.remove('active');
-  });
+  avatarModal.addEventListener('click', e => { if (e.target === avatarModal) avatarModal.classList.remove('active'); });
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -1685,6 +2238,7 @@
       document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
       document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
       authMsg.className = 'msg';
+      if (!isLogin) generateCaptcha();
     });
   });
 
@@ -1693,23 +2247,27 @@
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const pass = document.getElementById('regPass').value;
+    const captchaInput = document.getElementById('regCaptcha').value.trim().toUpperCase();
 
     if (name.length < 3) return showMsg(t('msg_nick_short'), 'error');
+    if (!captchaInput) return showMsg(t('msg_captcha_empty'), 'error');
+    if (captchaInput !== captchaCode) {
+      generateCaptcha();
+      document.getElementById('regCaptcha').value = '';
+      return showMsg(t('msg_captcha_wrong'), 'error');
+    }
 
     const users = JSON.parse(localStorage.getItem('churka_users') || '{}');
     if (users[name.toLowerCase()]) return showMsg(t('msg_nick_taken'), 'error');
 
-    users[name.toLowerCase()] = {
-      name, email, pass,
-      avatar: null,
-      regDate: new Date().toISOString()
-    };
+    users[name.toLowerCase()] = { name, email, pass, avatar: null, regDate: new Date().toISOString() };
     localStorage.setItem('churka_users', JSON.stringify(users));
-
     currentUser = users[name.toLowerCase()];
     localStorage.setItem('churka_user', JSON.stringify(currentUser));
 
     showMsg(t('msg_reg_success'), 'success');
+    generateCaptcha();
+    document.getElementById('regCaptcha').value = '';
     setTimeout(() => { updateUI(); authMsg.className = 'msg'; }, 1000);
   });
 
@@ -1737,18 +2295,15 @@
     updateUI();
   });
 
-  document.getElementById('menuDownload').addEventListener('click', () => {
+  document.getElementById('menuRelease').addEventListener('click', () => {
     modal.classList.remove('active');
-    document.getElementById('download').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('release').scrollIntoView({ behavior: 'smooth' });
   });
 
   document.getElementById('menuChangePass').addEventListener('click', () => {
     alert(currentLang === 'ru' ? 'Функция в разработке' : 'Feature in development');
   });
 
-  /* ============================================
-     СМЕНА АВАТАРКИ
-  ============================================ */
   const presetsGrid = document.getElementById('avatarPresets');
   const avatarPreview = document.getElementById('avatarPreview');
   const avatarFileInput = document.getElementById('avatarFileInput');
@@ -1759,8 +2314,6 @@
       const div = document.createElement('div');
       div.className = 'avatar-preset';
       div.style.backgroundImage = `url('${url}')`;
-      div.style.backgroundSize = 'cover';
-      div.dataset.url = url;
       if (currentUser && currentUser.avatar === url) div.classList.add('active');
       div.addEventListener('click', () => {
         document.querySelectorAll('.avatar-preset').forEach(p => p.classList.remove('active'));
@@ -1774,11 +2327,8 @@
 
   document.getElementById('editAvatarBtn').addEventListener('click', () => {
     selectedAvatar = currentUser.avatar || null;
-    if (currentUser.avatar) {
-      avatarPreview.innerHTML = `<img src="${currentUser.avatar}" alt="">`;
-    } else {
-      avatarPreview.textContent = currentUser.name[0].toUpperCase();
-    }
+    if (currentUser.avatar) avatarPreview.innerHTML = `<img src="${currentUser.avatar}" alt="">`;
+    else avatarPreview.textContent = currentUser.name[0].toUpperCase();
     renderPresets();
     avatarModal.classList.add('active');
   });
@@ -1786,12 +2336,10 @@
   avatarFileInput.addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-
     if (file.size > 500000) {
       alert(currentLang === 'ru' ? 'Файл слишком большой (макс. 500KB)' : 'File too large (max 500KB)');
       return;
     }
-
     const reader = new FileReader();
     reader.onload = ev => {
       selectedAvatar = ev.target.result;
@@ -1804,15 +2352,12 @@
   document.getElementById('saveAvatarBtn').addEventListener('click', () => {
     if (!currentUser) return;
     currentUser.avatar = selectedAvatar;
-
     const users = JSON.parse(localStorage.getItem('churka_users') || '{}');
     if (users[currentUser.name.toLowerCase()]) {
       users[currentUser.name.toLowerCase()].avatar = selectedAvatar;
       localStorage.setItem('churka_users', JSON.stringify(users));
     }
-
     localStorage.setItem('churka_user', JSON.stringify(currentUser));
-
     updateUI();
     avatarModal.classList.remove('active');
     showMsg(t('msg_avatar_saved'), 'success');
@@ -1830,77 +2375,6 @@
     authMsg.className = 'msg ' + type;
   }
 
-  /* ============================================
-     СКАЧИВАНИЕ
-  ============================================ */
-  document.getElementById('downloadBtn').addEventListener('click', function() {
-    const original = this.textContent;
-    this.textContent = currentLang === 'ru' ? 'Генерация ссылки...' : 'Generating link...';
-    this.disabled = true;
-
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      this.textContent = (currentLang === 'ru' ? 'Загрузка ' : 'Loading ') + progress + '%';
-      if (progress >= 100) {
-        clearInterval(interval);
-        this.textContent = currentLang === 'ru' ? 'Готово!' : 'Done!';
-
-        const content = `Churka DLC Client v4.2
-====================
-
-Спасибо за скачивание! / Thanks for downloading!
-
-Инструкция:
-1. Распакуй архив
-2. Запусти ChurkaDLCL.auncher.exe от имени администратора
-3. Выбери версию Minecraft
-4. Играй!
-
-Поддерживаемые версии: 1.8.9, 1.12.2, 1.16.5, 1.18.2, 1.20.4
-
-Приятной игры!`;
-
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ChurkaDLC_v4.2_README.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        setTimeout(() => {
-          this.textContent = original;
-          this.disabled = false;
-        }, 2000);
-      }
-    }, 150);
-  });
-
-  /* ============================================
-     АНИМАЦИЯ ПОЯВЛЕНИЯ
-  ============================================ */
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.feature, .faq-item, .download-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = '0.6s ease';
-    observer.observe(el);
-  });
-
-  /* ============================================
-     ИНИЦИАЛИЗАЦИЯ
-  ============================================ */
   applyLanguage();
   updateUI();
 </script>
