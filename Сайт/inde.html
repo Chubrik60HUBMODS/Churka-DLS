@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barrel Clicker — кликер про бочки для Windows</title>
+<meta name="description" content="Barrel Clicker — бесплатный кликер про бочки: 512 уровней, слияния, магнитный шторм, престиж и офлайн-доход. Скачать для Windows одним файлом.">
+<meta name="theme-color" content="#070a13">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* ========== БАЗА ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070a13;
+  --bg-2:#0c1020;
+  --panel:#11162a;
+  --panel-2:#161c33;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --text:#eef1f8;
+  --dim:#9aa3b8;
+  --mute:#6b7691;
+  --amber:#ffb238;
+  --amber-2:#ffd977;
+  --purple:#a855f7;
+  --blue:#38bdf8;
+  --green:#4ade80;
+  --red:#ff5f6d;
+  --pink:#ec4899;
+  --gold:#fbbf24;
+  --radius:18px;
+  --shadow:0 20px 60px rgba(0,0,0,.55);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ========== ФОН ========== */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35}
+.blob-1{width:600px;height:600px;background:#ffb238;top:-200px;left:-150px;animation:float1 20s ease-in-out infinite}
+.blob-2{width:500px;height:500px;background:#a855f7;bottom:-150px;right:-100px;animation:float2 25s ease-in-out infinite}
+.blob-3{width:400px;height:400px;background:#38bdf8;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.15;animation:float3 30s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-80px,-60px)}}
+@keyframes float3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
+
+/* ========== ПОДЛОЖКА ========== */
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ========== ХЕДЕР ========== */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:rgba(7,10,19,.75);
+  border-bottom:1px solid var(--line);
+  padding:14px 0;
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand-mark{width:44px;height:44px;display:block;flex-shrink:0;transition:transform .3s}
+.brand:hover .brand-mark{transform:rotate(-8deg) scale(1.05)}
+.brand-mark svg{width:100%;height:100%;display:block}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-text b{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.brand-text i{font-size:11px;color:var(--dim);font-style:normal;font-weight:600;text-transform:uppercase;letter-spacing:1.5px}
+.site-nav{display:flex;gap:4px}
+.site-nav a{
+  color:var(--dim);text-decoration:none;font-size:14px;font-weight:600;
+  padding:8px 14px;border-radius:10px;transition:.2s;
+}
+.site-nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
+
+/* ========== КНОПКИ ========== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 22px;border-radius:12px;font-family:inherit;
+  font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;
+  border:none;transition:.25s;white-space:nowrap;position:relative;overflow:hidden;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#ffb238,#e07a1a);
+  color:#1a0f00;
+  box-shadow:0 8px 24px rgba(255,178,56,.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,178,56,.5)}
+.btn-ghost{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border:1px solid var(--line-2);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.btn-lg{padding:16px 30px;font-size:15px;border-radius:14px}
+.btn-xl{padding:20px 40px;font-size:17px;border-radius:16px;width:100%}
+.btn-header{padding:10px 18px;font-size:13px}
+.btn-meta{font-size:11px;opacity:.7;font-weight:600}
+.dl-ico{font-size:1.1em;line-height:1}
+
+/* ========== HERO ========== */
+.hero{
+  display:grid;grid-template-columns:1.1fr 1fr;
+  gap:60px;align-items:center;
+  padding:80px 24px 60px;
+}
+.hero-copy .eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:6px 14px;background:rgba(255,178,56,.1);
+  border:1px solid rgba(255,178,56,.3);
+  border-radius:99px;font-size:12px;font-weight:700;
+  color:#ffd977;text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:24px;
+}
+.pulse-dot{
+  width:8px;height:8px;background:#4ade80;border-radius:50%;
+  box-shadow:0 0 0 0 rgba(74,222,128,.7);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(74,222,128,.7)}
+  70%{box-shadow:0 0 0 12px rgba(74,222,128,0)}
+  100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}
+}
+.hero h1{
+  font-size:clamp(48px,7vw,88px);font-weight:900;
+  line-height:1;letter-spacing:-3px;margin-bottom:24px;
+}
+.grad{
+  background:linear-gradient(135deg,#ffd977,#ffb238,#e07a1a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.lead{font-size:clamp(16px,1.5vw,19px);color:var(--dim);margin-bottom:36px;max-width:520px;line-height:1.7}
+.lead b{color:#ffd977;font-weight:700}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:32px}
+.hero-facts{display:flex;gap:20px;flex-wrap:wrap;list-style:none;margin-bottom:24px}
+.hero-facts li{
+  font-size:13px;color:var(--dim);font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+.hero-facts li::before{content:'✓';color:#4ade80;font-weight:900;font-size:14px}
+.hero-meta{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--mute)}
+.meta-pill{
+  padding:3px 10px;background:rgba(255,178,56,.15);
+  color:#ffd977;border-radius:99px;font-weight:700;font-size:11px;
+}
+
+/* HERO VISUAL */
+.hero-visual{position:relative;display:flex;justify-content:center;align-items:center}
+.halo{
+  position:absolute;width:120%;height:120%;
+  background:radial-gradient(circle,rgba(255,178,56,.25),transparent 60%);
+  filter:blur(40px);border-radius:50%;z-index:-1;
+  animation:pulseHalo 4s ease-in-out infinite;
+}
+@keyframes pulseHalo{
+  0%,100%{opacity:.5;transform:scale(1)}
+  50%{opacity:.9;transform:scale(1.05)}
+}
+.app-window{
+  width:100%;max-width:460px;
+  background:var(--panel);
+  border:1px solid var(--line-2);
+  border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow);
+  animation:floatWin 6s ease-in-out infinite;
+}
+@keyframes floatWin{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-10px) rotate(1deg)}
+}
+.app-titlebar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:rgba(0,0,0,.4);
+  border-bottom:1px solid var(--line);
+  font-size:12px;color:var(--dim);
+}
+.win-dots{display:flex;gap:6px}
+.win-dots i{width:10px;height:10px;border-radius:50%;display:block}
+.win-dots i:nth-child(1){background:#ff5f56}
+.win-dots i:nth-child(2){background:#ffbd2e}
+.win-dots i:nth-child(3){background:#27c93f}
+.win-title{display:flex;align-items:center;gap:6px;font-weight:600;color:#eef1f8}
+.win-ico{font-size:14px}
+.win-controls{font-family:monospace;opacity:.5;letter-spacing:2px}
+.app-screen{
+  aspect-ratio:980/1020;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 30% 30%,rgba(255,178,56,.3),transparent 60%),
+    radial-gradient(circle at 70% 70%,rgba(168,85,247,.25),transparent 60%),
+    linear-gradient(135deg,#1a1f33,#0f1322);
+  position:relative;overflow:hidden;
+}
+/* Заглушка вместо картинки — псевдо-бочки */
+.app-screen::before{
+  content:'';position:absolute;inset:20px;
+  background:
+    radial-gradient(circle at 20% 20%,#ffb238 12%,transparent 13%),
+    radial-gradient(circle at 50% 20%,#e07a1a 12%,transparent 13%),
+    radial-gradient(circle at 80% 20%,#ffd977 12%,transparent 13%),
+    radial-gradient(circle at 20% 50%,#e07a1a 12%,transparent 13%),
+    radial-gradient(circle at 50% 50%,#ffb238 12%,transparent 13%),
+    radial-gradient(circle at 80% 50%,#e07a1a 12%,transparent 13%),
+    radial-gradient(circle at 20% 80%,#ffd977 12%,transparent 13%),
+    radial-gradient(circle at 50% 80%,#ffb238 12%,transparent 13%),
+    radial-gradient(circle at 80% 80%,#e07a1a 12%,transparent 13%);
+  animation:bounce 3s ease-in-out infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.app-screen::after{
+  content:'🛢';position:absolute;font-size:120px;
+  filter:drop-shadow(0 10px 30px rgba(255,178,56,.5));
+  animation:rotate 8s linear infinite;
+}
+@keyframes rotate{
+  0%{transform:rotate(0) scale(1)}
+  50%{transform:rotate(8deg) scale(1.05)}
+  100%{transform:rotate(0) scale(1)}
+}
+
+/* Floating chips */
+.float-chip{
+  position:absolute;
+  padding:10px 16px;
+  background:rgba(17,22,42,.9);
+  border:1px solid var(--line-2);
+  border-radius:12px;
+  font-size:13px;font-weight:700;color:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  display:flex;align-items:center;gap:8px;
+  white-space:nowrap;
+}
+.chip-1{top:10%;left:-30px;animation:float1 4s ease-in-out infinite}
+.chip-2{top:45%;right:-40px;animation:float2 5s ease-in-out infinite}
+.chip-3{bottom:15%;left:-20px;animation:float3 6s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,-15px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-15px,10px)}}
+@keyframes float3{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-10px)}}
+
+/* ========== STATS ========== */
+.stats-wrap{padding:40px 24px}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  padding:36px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);
+}
+.stat{text-align:center}
+.stat b{
+  font-size:clamp(32px,4vw,48px);font-weight:900;
+  background:linear-gradient(135deg,#ffd977,#ffb238);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;letter-spacing:-2px;display:block;
+  line-height:1.1;margin-bottom:6px;
+}
+.stat span{font-size:13px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+
+/* ========== SECTION ========== */
+.section{padding:80px 24px}
+.sec-head{text-align:center;max-width:720px;margin:0 auto 60px}
+.kicker{
+  display:inline-block;padding:4px 12px;
+  background:rgba(255,178,56,.12);
+  border:1px solid rgba(255,178,56,.3);
+  color:#ffd977;border-radius:99px;
+  font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:16px;
+}
+.sec-head h2{
+  font-size:clamp(32px,5vw,52px);font-weight:900;
+  line-height:1.1;letter-spacing:-2px;margin-bottom:16px;
+}
+.dim{color:var(--mute);font-weight:700}
+.sec-head p{font-size:16px;color:var(--dim);line-height:1.7}
+
+/* ========== FEATURES ========== */
+.feature-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:18px;
+}
+.feature{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:28px;transition:.3s;position:relative;overflow:hidden;
+}
+.feature::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top right,rgba(255,178,56,.08),transparent 60%);
+  opacity:0;transition:.3s;
+}
+.feature:hover{transform:translateY(-6px);border-color:rgba(255,178,56,.3);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.feature:hover::before{opacity:1}
+.feature-ico{font-size:36px;display:block;margin-bottom:16px;filter:drop-shadow(0 4px 12px rgba(255,178,56,.3))}
+.feature h3{font-size:18px;font-weight:800;margin-bottom:8px;letter-spacing:-.3px;position:relative}
+.feature p{font-size:14px;color:var(--dim);line-height:1.65;position:relative}
+.feature[data-c="purple"]:hover{border-color:rgba(168,85,247,.4)}
+.feature[data-c="blue"]:hover{border-color:rgba(56,189,248,.4)}
+.feature[data-c="green"]:hover{border-color:rgba(74,222,128,.4)}
+.feature[data-c="red"]:hover{border-color:rgba(255,95,109,.4)}
+.feature[data-c="indigo"]:hover{border-color:rgba(99,102,241,.4)}
+.feature[data-c="pink"]:hover{border-color:rgba(236,72,153,.4)}
+
+/* ========== SCREENS ========== */
+.gallery{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.shot{
+  position:relative;border-radius:16px;overflow:hidden;
+  background:var(--panel);border:1px solid var(--line);
+  cursor:pointer;transition:.3s;grid-column:span 3;
+  aspect-ratio:1;
+}
+.shot-big{grid-column:span 3;grid-row:span 2;aspect-ratio:auto}
+.shot:hover{border-color:rgba(255,178,56,.5);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;background:linear-gradient(135deg,#1a1f33,#0f1322)}
+.shot::before{
+  content:'🛢';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:80px;opacity:.6;pointer-events:none;z-index:1;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.5));
+}
+.shot-big::before{font-size:160px}
+figcaption{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:20px 20px 18px;
+  background:linear-gradient(to top,rgba(7,10,19,.95),transparent);
+  z-index:2;
+}
+figcaption b{font-size:16px;font-weight:800;display:block;margin-bottom:4px;color:#fff}
+figcaption span{font-size:13px;color:var(--dim)}
+.shot-zoom{
+  position:absolute;top:12px;right:12px;
+  width:32px;height:32px;
+  background:rgba(0,0,0,.6);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#fff;z-index:3;
+  opacity:0;transition:.3s;
+}
+.shot:hover .shot-zoom{opacity:1}
+
+/* ========== STEPS ========== */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+.step{
+  padding:32px 28px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);
+  position:relative;
+}
+.step-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:48px;font-weight:900;color:rgba(255,178,56,.15);
+  line-height:1;margin-bottom:16px;display:block;
+}
+.step h3{font-size:20px;font-weight:800;margin-bottom:10px}
+.step p{font-size:14px;color:var(--dim);line-height:1.65}
+.step code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;padding:2px 6px;
+  background:rgba(255,178,56,.1);border-radius:4px;color:#ffd977;
+}
+.start-extras{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.note{
+  display:flex;gap:16px;padding:24px;
+  background:rgba(56,189,248,.05);
+  border:1px solid rgba(56,189,248,.2);
+  border-radius:var(--radius);
+}
+.note-ico{font-size:32px;flex-shrink:0}
+.note b{display:block;font-size:15px;font-weight:800;margin-bottom:6px;color:#7dd3fc}
+.note p{font-size:13px;color:var(--dim);line-height:1.6}
+.specs-card{
+  padding:24px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);
+}
+.specs-title{font-size:13px;font-weight:800;color:#ffd977;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:block}
+.specs{list-style:none}
+.specs li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.specs li:last-child{border-bottom:none}
+.specs li span{color:var(--dim)}
+.specs li b{font-weight:700;color:#fff}
+.specs-foot{font-size:12px;color:var(--mute);margin-top:12px;line-height:1.6}
+
+/* ========== DOWNLOAD ========== */
+.download-section{padding:80px 24px}
+.download-card{
+  background:linear-gradient(135deg,rgba(255,178,56,.1),rgba(168,85,247,.08));
+  border:1px solid rgba(255,178,56,.25);
+  border-radius:28px;padding:60px 48px;
+  position:relative;overflow:hidden;
+}
+.download-card::before{
+  content:'';position:absolute;top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:conic-gradient(from 0deg,transparent,rgba(255,178,56,.1),transparent 30%);
+  animation:spin 20s linear infinite;pointer-events:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.download-inner{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+}
+.dl-copy h2{
+  font-size:clamp(28px,4vw,42px);font-weight:900;
+  letter-spacing:-1.5px;margin-bottom:12px;line-height:1.1;
+}
+.dl-lead{font-size:16px;color:var(--dim);margin-bottom:24px;line-height:1.6}
+.dl-facts{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dl-facts li{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.dl-facts li span{color:var(--dim)}
+.dl-facts li b{color:#fff;font-weight:700}
+.dl-action{text-align:center}
+.dl-sub{font-size:13px;color:var(--dim);margin-top:14px;line-height:1.5}
+.hash{
+  margin-top:24px;padding:16px;
+  background:rgba(0,0,0,.35);border:1px solid var(--line);
+  border-radius:12px;text-align:left;
+  display:flex;flex-direction:column;gap:10px;
+}
+.hash-label{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.hash code{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--dim);word-break:break-all;line-height:1.4;
+}
+.copy-btn{
+  padding:6px 12px;font-size:11px;font-weight:700;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);border-radius:8px;
+  color:#fff;cursor:pointer;font-family:inherit;
+  align-self:flex-start;transition:.2s;
+}
+.copy-btn:hover{background:rgba(255,255,255,.15)}
+
+/* ========== FAQ ========== */
+.faq-list{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;transition:.3s;
+}
+.faq-item[open]{border-color:rgba(255,178,56,.3)}
+.faq-item summary{
+  padding:20px 24px;cursor:pointer;font-weight:700;font-size:16px;
+  list-style:none;display:flex;justify-content:space-between;align-items:center;
+  position:relative;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:'+';font-size:24px;color:#ffd977;
+  transition:.3s;font-weight:300;line-height:1;
+}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-body{padding:0 24px 22px;color:var(--dim);font-size:14px;line-height:1.7}
+.faq-body code{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  padding:2px 6px;background:rgba(255,178,56,.1);border-radius:4px;color:#ffd977;
+}
+
+/* ========== FOOTER ========== */
+.site-footer{
+  background:rgba(0,0,0,.4);
+  border-top:1px solid var(--line);
+  padding:40px 0;
+  margin-top:80px;
+}
+.footer-inner{
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+}
+.footer-nav{display:flex;gap:20px;flex-wrap:wrap}
+.footer-nav a{color:var(--dim);text-decoration:none;font-size:14px;font-weight:600;transition:.2s}
+.footer-nav a:hover{color:#ffd977}
+.copyright{grid-column:1/-1;color:var(--mute);font-size:13px;text-align:center;padding-top:20px;border-top:1px solid var(--line)}
+
+/* ========== LIGHTBOX ========== */
+.lightbox{
+  position:fixed;inset:0;background:rgba(7,10,19,.96);
+  backdrop-filter:blur(20px);
+  z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  padding:40px;
+}
+.lightbox[hidden]{display:none}
+.lb-inner{text-align:center;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:16px}
+.lb-img{max-width:90vw;max-height:75vh;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.8);object-fit:contain}
+.lb-cap{color:#fff;font-size:16px;font-weight:700}
+.lb-hint{color:var(--mute);font-size:12px;font-family:'JetBrains Mono',monospace}
+.lb-close,.lb-nav{
+  position:absolute;background:rgba(255,255,255,.1);
+  border:1px solid var(--line-2);border-radius:50%;
+  color:#fff;cursor:pointer;font-size:20px;
+  width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+  transition:.2s;font-family:inherit;
+}
+.lb-close:hover,.lb-nav:hover{background:rgba(255,178,56,.3);border-color:#ffb238}
+.lb-close{top:20px;right:20px}
+.lb-prev{left:20px;top:50%;transform:translateY(-50%)}
+.lb-next{right:20px;top:50%;transform:translateY(-50%)}
+
+/* ========== АДАПТИВ ========== */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;gap:40px;text-align:center;padding:60px 24px 40px}
+  .hero-copy{display:flex;flex-direction:column;align-items:center}
+  .hero-actions{justify-content:center}
+  .hero-facts,.hero-meta{justify-content:center}
+  .hero-visual{max-width:500px;margin:0 auto}
+  .float-chip{display:none}
+  .download-inner,.start-extras,.footer-inner{grid-template-columns:1fr}
+  .gallery{grid-template-columns:repeat(4,1fr)}
+  .shot,.shot-big{grid-column:span 2;grid-row:auto;aspect-ratio:1}
+  .site-nav{display:none}
+  .steps{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .wrap{padding:0 16px}
+  .hero{padding:40px 16px 30px;gap:30px}
+  .hero h1{letter-spacing:-2px}
+  .section,.download-section{padding:50px 16px}
+  .feature-grid{grid-template-columns:1fr}
+  .stats{padding:24px;gap:20px}
+  .download-card{padding:36px 22px}
+  .dl-facts{grid-template-columns:1fr}
+  .btn-lg,.btn-xl{padding:14px 22px;font-size:14px}
+  .btn-header .btn-meta{display:none}
+  .brand-text i{display:none}
+  .header-inner{gap:8px}
+  .site-header{padding:10px 0}
+  .lb-close,.lb-nav{width:40px;height:40px;font-size:16px}
+  .lb-prev{left:10px}.lb-next{right:10px}.lb-close{top:10px;right:10px}
+  .gallery{grid-template-columns:1fr 1fr;gap:10px}
+  .shot,.shot-big{grid-column:span 1;grid-row:auto}
+  .shot-big{grid-column:span 2;aspect-ratio:16/9}
+  .footer-nav{gap:14px;justify-content:center}
+  .download-inner{gap:32px}
+  .hash code{font-size:9px}
+}
+
+/* ========== REVEAL АНИМАЦИИ ========== */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-fallback .reveal{opacity:1;transform:none;transition:none}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <span class="blob blob-1"></span>
+  <span class="blob blob-2"></span>
+  <span class="blob blob-3"></span>
+</div>
+
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="Barrel Clicker — на главную">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd977"/>
+              <stop offset="0.55" stop-color="#ffb238"/>
+              <stop offset="1" stop-color="#e07a1a"/>
+            </linearGradient>
+            <clipPath id="brandClip">
+              <path d="M18 9 C18 5 46 5 46 9 C54 23 54 41 46 55 C46 59 18 59 18 55 C10 41 10 23 18 9 Z"/>
+            </clipPath>
+          </defs>
+          <path d="M18 9 C18 5 46 5 46 9 C54 23 54 41 46 55 C46 59 18 59 18 55 C10 41 10 23 18 9 Z" fill="url(#brandGrad)"/>
+          <g clip-path="url(#brandClip)">
+            <rect x="8" y="19" width="48" height="7" fill="#1b2233" opacity="0.9"/>
+            <rect x="8" y="38" width="48" height="7" fill="#1b2233" opacity="0.9"/>
+            <rect x="20" y="12" width="4" height="40" rx="2" fill="#ffffff" opacity="0.18"/>
+          </g>
+          <ellipse cx="32" cy="9" rx="14" ry="3.6" fill="#1b2233" opacity="0.75"/>
+          <ellipse cx="32" cy="8.2" rx="11" ry="2.4" fill="#2a1c08" opacity="0.55"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <b>Barrel Clicker</b>
+        <i>Scrap Yard</i>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Основная навигация">
+      <a href="#features">Возможности</a>
+      <a href="#screens">Скриншоты</a>
+      <a href="#start">Как играть</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <a class="btn btn-primary btn-header" href="download/BarrelClicker.exe" download id="dlHeader">
+      <span class="dl-ico" aria-hidden="true">↓</span>
+      Скачать
+      <span class="btn-meta">66,5 МБ</span>
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span>Windows 10/11 · бесплатно · без установки</span>
+
+      <h1>Barrel <span class="grad">Clicker</span></h1>
+
+      <p class="lead">
+        Соединяй бочки, собирай скрап и запускай магнитные шторма.
+        <b>512 уровней</b>, престиж, офлайн-доход — и ни одной подписки.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="download/BarrelClicker.exe" download>
+          <span class="dl-ico" aria-hidden="true">↓</span>
+          Скачать для Windows
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#screens">
+          <span aria-hidden="true">▸</span>
+          Посмотреть скриншоты
+        </a>
+      </div>
+
+      <ul class="hero-facts">
+        <li>Один файл</li>
+        <li>Без рекламы</li>
+        <li>Работает офлайн</li>
+      </ul>
+
+      <div class="hero-meta">
+        <span class="meta-pill">v2.0</span>
+        <span>Обновлено 4 ноября 2026</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <span class="halo" aria-hidden="true"></span>
+      <div class="app-window">
+        <div class="app-titlebar" aria-hidden="true">
+          <span class="win-dots"><i></i><i></i><i></i></span>
+          <span class="win-title">
+            <span class="win-ico">🛢</span>
+            Barrel Clicker
+          </span>
+          <span class="win-controls">— ▢ ✕</span>
+        </div>
+        <div class="app-screen" aria-label="Скриншот игрового поля"></div>
+      </div>
+      <div class="float-chip chip-1" aria-hidden="true"><span>🧲</span> +1 магнит</div>
+      <div class="float-chip chip-2" aria-hidden="true"><span>⚡️</span> Слияние ×1,33</div>
+      <div class="float-chip chip-3" aria-hidden="true"><span>🛢</span> 512 уровней</div>
+    </div>
+  </section>
+
+  <section class="wrap stats-wrap reveal">
+    <div class="stats">
+      <div class="stat"><b>512</b><span>уровней бочек</span></div>
+      <div class="stat"><b>32</b><span>клетки поля</span></div>
+      <div class="stat"><b>10</b><span>улучшений</span></div>
+      <div class="stat"><b>∞</b><span>перезапусков</span></div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="features">
+    <div class="sec-head reveal">
+      <span class="kicker">Возможности</span>
+      <h2>Всё, чтобы залипнуть<br><span class="dim">на пару сотен часов</span></h2>
+      <p>Простая механика на старте, глубокий прогресс дальше. Каждая покупка заметна, каждое слияние приятно.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature reveal" data-c="amber">
+        <span class="feature-ico">🧩</span>
+        <h3>Слияние 8×4</h3>
+        <p>Тащи одинаковые бочки друг на друга или кликни по двум. Новая бочка стоит дороже, чем две старые — доход растёт.</p>
+      </article>
+      <article class="feature reveal" data-c="purple">
+        <span class="feature-ico">🧱</span>
+        <h3>512 уровней</h3>
+        <p>От деревянной до сингулярности: 12 ручных уровней и 500 сгенерированных. 20 рангов, 25 материалов, свой цвет у каждого.</p>
+      </article>
+      <article class="feature reveal" data-c="blue">
+        <span class="feature-ico">🌪</span>
+        <h3>Магнитный шторм</h3>
+        <p>Каждые пять минут сверху падают магниты. Успей поймать — и вызови шторм сам, когда накопишь 10 🧲.</p>
+      </article>
+      <article class="feature reveal" data-c="green">
+        <span class="feature-ico">♻️</span>
+        <h3>Престиж и звёзды</h3>
+        <p>Перезапусти забег за золотой скрап и получи постоянный множитель. До 10 звёзд, каждая — ещё +10% к доходу.</p>
+      </article>
+      <article class="feature reveal" data-c="gold">
+        <span class="feature-ico">⚡️</span>
+        <h3>Умные покупки</h3>
+        <p>Зажми кнопку — улучшения покупаются пачкой каждые 0,085 с. Больше не нужно кликать сотню раз подряд.</p>
+      </article>
+      <article class="feature reveal" data-c="red">
+        <span class="feature-ico">🗑</span>
+        <h3>Мусоропровод</h3>
+        <p>Ненужную бочку — в утиль одним движением. Поле всегда под контролем, а счётчик выброшенных растёт.</p>
+      </article>
+      <article class="feature reveal" data-c="indigo">
+        <span class="feature-ico">🌙</span>
+        <h3>Офлайн-доход</h3>
+        <p>Бочки работают, даже когда игра закрыта. Возвращайся за накопленным скрапом — база 2 часа, улучшения продлевают.</p>
+      </article>
+      <article class="feature reveal" data-c="pink">
+        <span class="feature-ico">✨</span>
+        <h3>Эффекты и звук</h3>
+        <p>Живой фон, искры при слиянии, конфетти на престиже и синтезированные звуки. Всё можно отключить одной кнопкой.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section wrap" id="screens">
+    <div class="sec-head reveal">
+      <span class="kicker">Скриншоты</span>
+      <h2>Так это выглядит</h2>
+      <p>Тёмный интерфейс, крупные числа и понятные кнопки. Нажми на любой кадр, чтобы открыть его целиком.</p>
+    </div>
+
+    <div class="gallery">
+      <figure class="shot shot-big reveal" data-shot="1" data-caption="Поле слияния" tabindex="0" role="button">
+        <img alt="Поле слияния с бочками" loading="lazy">
+        <figcaption><b>Поле слияния</b><span>32 клетки, мусоропровод и пассивный доход</span></figcaption>
+        <span class="shot-zoom" aria-hidden="true">⤢</span>
+      </figure>
+      <figure class="shot reveal" data-shot="2" data-caption="Магнитный шторм" tabindex="0" role="button">
+        <img alt="Магнитный шторм" loading="lazy">
+        <figcaption><b>Магнитный шторм</b><span>Лови магниты</span></figcaption>
+        <span class="shot-zoom" aria-hidden="true">⤢</span>
+      </figure>
+      <figure class="shot reveal" data-shot="3" data-caption="Улучшения" tabindex="0" role="button">
+        <img alt="Улучшения" loading="lazy">
+        <figcaption><b>Улучшения</b><span>10 направлений</span></figcaption>
+        <span class="shot-zoom" aria-hidden="true">⤢</span>
+      </figure>
+      <figure class="shot reveal" data-shot="4" data-caption="Магазин бочек" tabindex="0" role="button">
+        <img alt="Магазин бочек" loading="lazy">
+        <figcaption><b>Магазин бочек</b><span>512 уровней</span></figcaption>
+        <span class="shot-zoom" aria-hidden="true">⤢</span>
+      </figure>
+      <figure class="shot reveal" data-shot="5" data-caption="Престиж" tabindex="0" role="button">
+        <img alt="Престиж" loading="lazy">
+        <figcaption><b>Престиж</b><span>Звёзды и множитель</span></figcaption>
+        <span class="shot-zoom" aria-hidden="true">⤢</span>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section wrap" id="start">
+    <div class="sec-head reveal">
+      <span class="kicker">Как начать</span>
+      <h2>Три шага — и ты на свалке</h2>
+      <p>Без установщика, без регистрации, без .NET и лишних скачиваний.</p>
+    </div>
+
+    <div class="steps">
+      <article class="step reveal">
+        <span class="step-num">01</span>
+        <h3>Скачай файл</h3>
+        <p>Нажми «Скачать для Windows». Один файл весом 66,5 МБ — внутри уже всё, что нужно.</p>
+      </article>
+      <article class="step reveal">
+        <span class="step-num">02</span>
+        <h3>Запусти .exe</h3>
+        <p>Двойной клик по <code>BarrelClicker.exe</code>. Установка не нужна. Если появится SmartScreen — «Подробнее» → «Выполнить в любом случае».</p>
+      </article>
+      <article class="step reveal">
+        <span class="step-num">03</span>
+        <h3>Собирай скрап</h3>
+        <p>Бочки появляются сами. Соединяй одинаковые, покупай улучшения и не забывай ловить магниты.</p>
+      </article>
+    </div>
+
+    <div class="start-extras">
+      <div class="note reveal">
+        <span class="note-ico" aria-hidden="true">🛡</span>
+        <div>
+          <b>Windows может спросить подтверждение</b>
+          <p>Файл не подписан платным цифровым сертификатом, поэтому SmartScreen перестраховывается. Игра работает полностью локально: не отправляет данные и не требует интернет. Нажми «Подробнее» → «Выполнить в любом случае».</p>
+        </div>
+      </div>
+      <div class="specs-card reveal">
+        <b class="specs-title">Системные требования</b>
+        <ul class="specs">
+          <li><span>ОС</span><b>Windows 10 / 11</b></li>
+          <li><span>Разрядность</span><b>64-bit</b></li>
+          <li><span>Место</span><b>~200 МБ</b></li>
+          <li><span>Интернет</span><b>не нужен</b></li>
+        </ul>
+        <p class="specs-foot">Использует WebView2 — он уже есть в Windows 10/11 вместе с Edge.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap download-section" id="download">
+    <div class="download-card reveal">
+      <div class="download-inner">
+        <div class="dl-copy">
+          <span class="kicker">Готово к игре</span>
+          <h2>Забрать Barrel Clicker</h2>
+          <p class="dl-lead">Один файл — и вся свалка твоя. Бесплатно, без рекламы, регистрации и подписок.</p>
+          <ul class="dl-facts">
+            <li><span>Версия</span><b>2.0</b></li>
+            <li><span>Размер</span><b>66,5 МБ</b></li>
+            <li><span>Платформа</span><b>Windows</b></li>
+            <li><span>Лицензия</span><b>бесплатно</b></li>
+          </ul>
+        </div>
+        <div class="dl-action">
+          <a class="btn btn-primary btn-xl" href="download/BarrelClicker.exe" download>
+            <span class="dl-ico" aria-hidden="true">↓</span>
+            Скачать BarrelClicker.exe
+          </a>
+          <p class="dl-sub">Нажимаешь — и файл уже качается. Установка не нужна.</p>
+          <div class="hash">
+            <span class="hash-label">SHA-256 файла</span>
+            <code id="shaValue">87EFA7FE6E00F345DF7BBCD38E3756360D146F10B476CE1576D2FCAFE62A5055</code>
+            <button class="copy-btn" id="copySha" type="button">Копировать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap faq" id="faq">
+    <div class="sec-head reveal">
+      <span class="kicker">Вопросы</span>
+      <h2>Коротко о главном</h2>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq-item" open>
+        <summary>Это правда бесплатно?</summary>
+        <div class="faq-body">Да. Ни рекламы, ни встроенных покупок, ни регистрации. Игра целиком лежит в одном файле и работает локально.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Нужно ли что-то устанавливать?</summary>
+        <div class="faq-body">Нет. <code>BarrelClicker.exe</code> — самодостаточный файл: внутри уже есть .NET-рантайм и сама игра. Просто запусти его.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Почему Windows предупреждает о файле?</summary>
+        <div class="faq-body">Приложение не подписано цифровым сертификатом — он стоит денег и для маленького проекта не обязателен. SmartScreen показывает предупреждение для любых неподписанных .exe. Нажми «Подробнее» → «Выполнить в любом случае».</div>
+      </details>
+      <details class="faq-item">
+        <summary>Где хранится прогресс?</summary>
+        <div class="faq-body">В папке <code>%LOCALAPPDATA%\BarrelClicker\profile\</code>. Сохранение происходит автоматически. Если удалить эту папку, игра начнётся заново.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Нужен ли интернет?</summary>
+        <div class="faq-body">Нет. Игра полностью офлайн: считает доход, сохраняет прогресс и не отправляет никакие данные.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Есть ли админ-панель?</summary>
+        <div class="faq-body">Да, для экспериментов: меню <b>☰ → Настройки → Открыть админку</b>. Пароль по умолчанию — <code>admin</code>, его можно сменить. Там можно выдать себе скрап, бочки и улучшения.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Это мод или чит для чужой игры?</summary>
+        <div class="faq-body">Нет. Barrel Clicker — полностью собственная игра, написанная с нуля: HTML/CSS/JS внутри окна Windows. Никаких чужих ассетов и серверов.</div>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <a class="brand brand-foot" href="#top" aria-label="Barrel Clicker">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs><clipPath id="brandClip2"><path d="M18 9 C18 5 46 5 46 9 C54 23 54 41 46 55 C46 59 18 59 18 55 C10 41 10 23 18 9 Z"/></clipPath></defs>
+          <path d="M18 9 C18 5 46 5 46 9 C54 23 54 41 46 55 C46 59 18 59 18 55 C10 41 10 23 18 9 Z" fill="#ffb238"/>
+          <g clip-path="url(#brandClip2)">
+            <rect x="8" y="19" width="48" height="7" fill="#1b2233" opacity="0.9"/>
+            <rect x="8" y="38" width="48" height="7" fill="#1b2233" opacity="0.9"/>
+            <rect x="20" y="12" width="4" height="40" rx="2" fill="#ffffff" opacity="0.18"/>
+          </g>
+          <ellipse cx="32" cy="9" rx="14" ry="3.6" fill="#1b2233" opacity="0.75"/>
+          <ellipse cx="32" cy="8.2" rx="11" ry="2.4" fill="#2a1c08" opacity="0.55"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <b>Barrel Clicker</b>
+        <i>Scrap Yard</i>
+      </span>
+    </a>
+    <nav class="footer-nav" aria-label="Навигация в подвале">
+      <a href="#features">Возможности</a>
+      <a href="#screens">Скриншоты</a>
+      <a href="#start">Как играть</a>
+      <a href="#faq">FAQ</a>
+      <a href="#download">Скачать</a>
+    </nav>
+    <p class="copyright">© 2026 Barrel Clicker. Сделано вручную, без рекламы и платежей.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр скриншота" hidden>
+  <button class="lb-close" id="lbClose" type="button" aria-label="Закрыть">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Предыдущий">‹</button>
+  <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Следующий">›</button>
+  <div class="lb-inner">
+    <img class="lb-img" id="lbImg" src="" alt="">
+    <p class="lb-cap" id="lbCap"></p>
+    <p class="lb-hint">Esc — закрыть · ← → — листать</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Плавное появление секций
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+
+  // SHA-256 copy
+  const copyBtn = document.getElementById('copySha');
+  copyBtn?.addEventListener('click', () => {
+    const sha = document.getElementById('shaValue').textContent.trim();
+    navigator.clipboard?.writeText(sha).then(() => {
+      const old = copyBtn.textContent;
+      copyBtn.textContent = '✓ Скопировано';
+      copyBtn.style.color = '#4ade80';
+      setTimeout(() => { copyBtn.textContent = old; copyBtn.style.color = ''; }, 1800);
+    });
+  });
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCap');
+  const lbClose = document.getElementById('lbClose');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+  const shots = Array.from(document.querySelectorAll('.shot'));
+  let currentShot = 0;
+
+  const shotData = {
+    '1': { bg: 'linear-gradient(135deg,#1a1f33,#0f1322)', emoji: '🛢', caption: 'Поле слияния' },
+    '2': { bg: 'linear-gradient(135deg,#a855f7,#6b21a8)', emoji: '🌪', caption: 'Магнитный шторм' },
+    '3': { bg: 'linear-gradient(135deg,#38bdf8,#0369a1)', emoji: '⚡', caption: 'Улучшения' },
+    '4': { bg: 'linear-gradient(135deg,#ffb238,#b45309)', emoji: '🧱', caption: 'Магазин бочек' },
+    '5': { bg: 'linear-gradient(135deg,#fbbf24,#d97706)', emoji: '♻️', caption: 'Престиж' }
+  };
+
+  function makeShotImage(id) {
+    const d = shotData[id];
+    const canvas = document.createElement('canvas');
+    canvas.width = 980;
+    canvas.height = 1020;
+    const c = canvas.getContext('2d');
+    const grad = c.createLinearGradient(0, 0, 980, 1020);
+    if (id === '1') { grad.addColorStop(0,'#1a1f33'); grad.addColorStop(1,'#0f1322'); }
+    if (id === '2') { grad.addColorStop(0,'#4c1d95'); grad.addColorStop(1,'#1e1b4b'); }
+    if (id === '3') { grad.addColorStop(0,'#0c4a6e'); grad.addColorStop(1,'#082f49'); }
+    if (id === '4') { grad.addColorStop(0,'#78350f'); grad.addColorStop(1,'#431407'); }
+    if (id === '5') { grad.addColorStop(0,'#713f12'); grad.addColorStop(1,'#422006'); }
+    c.fillStyle = grad;
+    c.fillRect(0, 0, 980, 1020);
+    // сетка
+    c.strokeStyle = 'rgba(255,255,255,0.05)';
+    c.lineWidth = 1;
+    for (let i = 0; i < 980; i += 80) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i, 1020); c.stroke(); }
+    for (let i = 0; i < 1020; i += 80) { c.beginPath(); c.moveTo(0, i); c.lineTo(980, i); c.stroke(); }
+    // большой эмодзи
+    c.font = '400px serif';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.globalAlpha = 0.9;
+    c.fillText(d.emoji, 490, 510);
+    c.globalAlpha = 1;
+    return canvas.toDataURL('image/png');
+  }
+
+  shots.forEach((shot, i) => {
+    const img = shot.querySelector('img');
+    const id = shot.dataset.shot;
+    img.src = makeShotImage(id);
+    shot.addEventListener('click', () => openLightbox(i));
+    shot.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); } });
+  });
+
+  function openLightbox(i) {
+    currentShot = i;
+    updateLightbox();
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lightbox.hidden = true;
+    document.body.style.overflow = '';
+  }
+  function updateLightbox() {
+    const shot = shots[currentShot];
+    const id = shot.dataset.shot;
+    lbImg.src = makeShotImage(id);
+    lbCap.textContent = shotData[id].caption;
+  }
+  function nextShot() { currentShot = (currentShot + 1) % shots.length; updateLightbox(); }
+  function prevShot() { currentShot = (currentShot - 1 + shots.length) % shots.length; updateLightbox(); }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbNext.addEventListener('click', nextShot);
+  lbPrev.addEventListener('click', prevShot);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') nextShot();
+    if (e.key === 'ArrowLeft') prevShot();
+  });
+})();
+</script>
+
+</body>
+</html>
